@@ -26,8 +26,14 @@ public class ProcessingButtonRenderer extends ButtonRenderer {
 		
 		pApplet.textFont(engine.getFont());
 		pApplet.textMode(PApplet.MODEL);
-		button.setWidth(pApplet.textWidth(l.getText()) + 10);
-		button.setHeight(pApplet.textAscent() + pApplet.textDescent() + 10);
+		
+		float w = pApplet.textWidth(l.getText());
+		float h = pApplet.textAscent() + pApplet.textDescent();
+		button.setWidth(w * ((float) 1.4));
+		button.setHeight(h * ((float) 1.6));
+		
+		button.getLabel().setY(h * ((float) -0.1));
+		
 		pApplet.fill(170);
 		pApplet.stroke(230);
 		pApplet.rect(0, 0, button.getWidth(), button.getHeight());
