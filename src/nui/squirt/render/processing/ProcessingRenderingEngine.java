@@ -18,7 +18,7 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 
 	public ProcessingRenderingEngine(PApplet p) {
 		this.setPApplet(p);
-		PFont f = p.createFont("FFScala", 16);
+		PFont f = p.createFont("Helvetica", 20);
 		this.setFont(f);
 		this.getPApplet().textFont(f);
 	}
