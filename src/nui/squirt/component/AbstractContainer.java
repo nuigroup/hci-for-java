@@ -10,14 +10,14 @@ import nui.squirt.render.RenderingEngine;
 
 public abstract class AbstractContainer extends AbstractComponent implements Container {
 
-	protected List<Component> components = new ArrayList<Component>();
+	protected List<Component> children = new ArrayList<Component>();
 
 	public AbstractContainer(float x, float y, float w, float h) {
 		super(x, y, w, h);
 	}
 
-	public void addComponent(Component c) {
-		components.add(c);
+	public void addChild(Component c) {
+		children.add(c);
 		Renderer r = this.getRenderer();
 		if (r != null) {
 			RenderingEngine e = r.getRenderingEngine();
@@ -26,8 +26,8 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 		}
 	}
 
-	public List<Component> getComponents() {
-		return components;
+	public List<Component> getChildren() {
+		return children;
 	}
 	
 	public void render() {
@@ -35,7 +35,7 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 		
 		this.getRenderer().draw();
 		
-		for (Component c: components) {
+		for (Component c: children) {
 			c.render();
 		}
 		

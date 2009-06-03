@@ -25,7 +25,7 @@ public class Frame extends AbstractContainer {
 		this.renderer = renderer;
 		RenderingEngine e = renderer.getRenderingEngine();
 		
-		for (Component c: components) {
+		for (Component c: children) {
 			Renderer r = c.getRenderer();
 			if (r == null || !r.getRenderingEngine().equals(e)) {
 				c.setRenderer(e.getRenderer(c));

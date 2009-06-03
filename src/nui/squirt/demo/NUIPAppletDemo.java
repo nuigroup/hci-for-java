@@ -48,17 +48,17 @@ public class NUIPAppletDemo extends PApplet {
 		
 		f = new Frame(width/2, height/2, width/2, height/2);
 		controller.addComponent(f);
-		f.addComponent(new Label(0, 0, "Frame0"));
-		f.addComponent(new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
-		f.addComponent(new Button(50, 50, "Button"));
+		f.addChild(new Label(0, 0, "Frame0"));
+		f.addChild(new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
+		f.addChild(new Button(50, 50, "Button"));
 		
 		f1 = new Frame(width*3/4+width/8, height/2+height/8, width/8, height/8);
 		controller.addComponent(f1);
-		f1.addComponent(new Label(0, 0, "Frame1"));
+		f1.addChild(new Label(0, 0, "Frame1"));
 		
 		// Adding sub-component prior to adding to controller
 		f2 = new Frame(width*3/4+width/8, height/4+height/8, width/8, height/8);
-		f2.addComponent(new Label(0, 0, "Frame2"));
+		f2.addChild(new Label(0, 0, "Frame2"));
 		controller.addComponent(f2);
 	}
 	

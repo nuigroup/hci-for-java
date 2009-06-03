@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Container extends Component {
 	
-	public void addComponent(Component c);
-	public List<Component> getComponents();
+	public void addChild(Component c);
+	public List<Component> getChildren();
 
 }
