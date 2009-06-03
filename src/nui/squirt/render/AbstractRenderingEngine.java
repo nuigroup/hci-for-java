@@ -10,6 +10,8 @@ public abstract class AbstractRenderingEngine implements RenderingEngine {
 			return getLabelRenderer((Label) c);
 		else if (c instanceof Frame)
 			return getFrameRenderer((Frame) c);
+		else if (c instanceof Button)
+			return getButtonRenderer((Button) c);
 		else return null;
 	}
 
