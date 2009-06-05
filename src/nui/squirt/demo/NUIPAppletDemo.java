@@ -51,9 +51,12 @@ public class NUIPAppletDemo extends PApplet {
 		controller.addComponent(f);
 		NUIController.setParentChildPair(f, new Label(0, 0, "Frame0"));
 		NUIController.setParentChildPair(f, new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
-		NUIController.setParentChildPair(f, new Button(50, 50, "Button"));
-		sin = new Label(0, f.getHeight()/2-30, Float.toString(sin(f.getRotation())));
-		NUIController.setParentChildPair(f, sin);
+		NUIController.setParentChildPair(f, new Button(50, -50, "Button"));
+		Frame angle = new Frame(0, f.getHeight()/4, f.getWidth()/2, f.getHeight()/4);
+		sin = new Label(0, angle.getHeight()/4, Float.toString(sin(f.getRotation())));
+		NUIController.setParentChildPair(angle, new Label(0, -angle.getHeight()/4, "Scale"));
+		NUIController.setParentChildPair(angle, sin);
+		NUIController.setParentChildPair(f, angle);
 		
 		f1 = new Frame(width*3/4+width/8, height/2+height/8, width/8, height/8);
 		controller.addComponent(f1);
