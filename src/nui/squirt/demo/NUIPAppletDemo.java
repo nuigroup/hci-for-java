@@ -29,6 +29,8 @@ public class NUIPAppletDemo extends PApplet {
 	private Label sin;
 	
 	private PImage img;
+
+	private Button moving;
 	
 	@Override
 	public void setup() {
@@ -66,6 +68,8 @@ public class NUIPAppletDemo extends PApplet {
 		f2 = new Frame(width*3/4+width/8, height/4+height/8, width/8, height/8);
 		NUIController.setParentChildPair(f2, new Label(0, 0, "Frame2"));
 		controller.addComponent(f2);
+		
+		moving = new Button(90, -90, "Elusive");
 	}
 	
 	@Override
@@ -73,10 +77,17 @@ public class NUIPAppletDemo extends PApplet {
 		background(255);
 		imageMode(CENTER);
 		image(img, width/2, height/2);
+		
 		f.setRotation((float) (f.getRotation()+0.01));
 		float s = sin(f.getRotation());
 		sin.setText(Float.toString(s));
 		f.setScale(s);
+		
+		if (f.getRotation()%TWO_PI < 0.01)
+			NUIController.setParentChildPair(f, moving);
+		else if (f.getRotation()%PI < 0.01)
+			NUIController.endParentChildPair(f, moving);
+		
 		controller.render();
 	}
 

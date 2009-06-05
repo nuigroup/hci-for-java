@@ -25,6 +25,10 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 			c.setRenderer(r2);
 		}
 	}
+	
+	public void removeChild(Component c) {
+		children.remove(c);
+	}
 
 	public List<Component> getChildren() {
 		return children;
