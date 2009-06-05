@@ -26,6 +26,7 @@ public class NUIPAppletDemo extends PApplet {
 	
 	private NUIController controller;
 	private Frame f, f1, f2;
+	private Label sin;
 	
 	private PImage img;
 	
@@ -51,6 +52,8 @@ public class NUIPAppletDemo extends PApplet {
 		NUIController.setParentChildPair(f, new Label(0, 0, "Frame0"));
 		NUIController.setParentChildPair(f, new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
 		NUIController.setParentChildPair(f, new Button(50, 50, "Button"));
+		sin = new Label(0, f.getHeight()/2-30, Float.toString(sin(f.getRotation())));
+		NUIController.setParentChildPair(f, sin);
 		
 		f1 = new Frame(width*3/4+width/8, height/2+height/8, width/8, height/8);
 		controller.addComponent(f1);
@@ -68,6 +71,9 @@ public class NUIPAppletDemo extends PApplet {
 		imageMode(CENTER);
 		image(img, width/2, height/2);
 		f.setRotation((float) (f.getRotation()+0.01));
+		float s = sin(f.getRotation());
+		sin.setText(Float.toString(s));
+		f.setScale(s);
 		controller.render();
 	}
 
