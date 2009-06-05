@@ -12,8 +12,8 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 
 	protected List<Component> children = new ArrayList<Component>();
 
-	public AbstractContainer(float x, float y, float w, float h) {
-		super(x, y, w, h);
+	public AbstractContainer(float x, float y) {
+		super(x, y);
 	}
 
 	public void addChild(Component c) {

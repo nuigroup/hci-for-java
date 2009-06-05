@@ -8,20 +8,12 @@ public abstract class AbstractComponent implements Component {
 	protected float x;
 	protected float y;
 	protected Container parent;
-	protected float width = 10;
-	protected float height = 10;
 	protected float rotation = 0;
 	protected float scale = 1;
 	
 	public AbstractComponent(float x, float y) {
 		this.x = x;
 		this.y = y;
-	}
-
-	public AbstractComponent(float x, float y, float w, float h) {
-		this(x, y);
-		this.width = w;
-		this.height = h;
 	}
 	
 	public float getX() {
@@ -46,22 +38,6 @@ public abstract class AbstractComponent implements Component {
 
 	public void setParent(Container parent) {
 		this.parent = parent;
-	}
-
-	public float getWidth() {
-		return width;
-	}
-
-	public void setWidth(float width) {
-		this.width = width;
-	}
-
-	public float getHeight() {
-		return height;
-	}
-
-	public void setHeight(float height) {
-		this.height = height;
 	}
 
 	public float getRotation() {

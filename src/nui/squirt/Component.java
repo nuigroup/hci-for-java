@@ -15,11 +15,6 @@ public interface Component {
 	public void setParent(Container parent);
 	public Container getParent();
 	
-	public void setWidth(float width);
-	public float getWidth();
-	public void setHeight(float height);
-	public float getHeight();
-	
 	public void setRotation(float theta);
 	public float getRotation();
 	

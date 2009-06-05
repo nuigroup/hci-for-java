@@ -8,9 +8,14 @@ import nui.squirt.render.RenderingEngine;
 public class Frame extends AbstractContainer {
 
 	private FrameRenderer renderer;
+	
+	private float width;
+	private float height;
 
 	public Frame(float x, float y, float w, float h) {
-		super(x, y, w, h);
+		super(x, y);
+		this.width = w;
+		this.height = h;
 	}
 
 	public FrameRenderer getRenderer() {
@@ -31,6 +36,22 @@ public class Frame extends AbstractContainer {
 				c.setRenderer(e.getRenderer(c));
 			}
 		}
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
 	}
 
 }
