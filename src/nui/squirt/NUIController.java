@@ -25,5 +25,17 @@ public class NUIController {
 		for (Component c: components)
 			c.render();
 	}
+	
+	/*
+	 *  This is a convenience method to establish a parent child relationship
+	 *  This both adds a child to the Container, and sets the parent attribute of the child.
+	 *  Do not establish this relationship by merely calling addChild() on the Container,
+	 *  the child's parent pointer will remain as is generating undesired behavior.
+	 */
+	
+	public static void setParentChildPair(Container parent, Component child) {
+		parent.addChild(child);
+		child.setParent(parent);
+	}
 
 }
