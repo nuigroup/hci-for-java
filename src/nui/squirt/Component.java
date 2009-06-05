@@ -12,6 +12,9 @@ public interface Component {
 	public void setY(float y);
 	public float getY();
 	
+	public void setParent(Container parent);
+	public Container getParent();
+	
 	public void setWidth(float width);
 	public float getWidth();
 	public void setHeight(float height);
