@@ -6,25 +6,26 @@ import nui.squirt.component.Label;
 
 public abstract class LabelRenderer extends AbstractRenderer {
 
-	private Label label;
-
-	public LabelRenderer(RenderingEngine e, Label l) {
+	public LabelRenderer(RenderingEngine e) {
 		super(e);
-		this.setComponent(l);
 	}
 	
-	@Override
-	public Component getComponent() {
-		return label;
+	public void prepare(Component c) {
+		prepare((Label) c);
 	}
 	
-	@Override
-	public void setComponent(Component c) {
-		this.setComponent((Label) c);
+	public abstract void prepare(Label l);
+	
+	public void draw(Component c) {
+		draw((Label) c);
 	}
 	
-	public void setComponent(Label l) {
-		this.label = l;
+	public abstract void draw(Label l);
+	
+	public void postDraw(Component c) {
+		postDraw((Label) c);
 	}
+	
+	public abstract void postDraw(Label l);
 	
 }

@@ -4,27 +4,29 @@ import nui.squirt.Component;
 import nui.squirt.component.Frame;
 
 
-public abstract class FrameRenderer extends AbstractRenderer {
-	
-	private Frame frame;
 
-	public FrameRenderer(RenderingEngine e, Frame f) {
+public abstract class FrameRenderer extends AbstractRenderer {
+
+	public FrameRenderer(RenderingEngine e) {
 		super(e);
-		this.setComponent(f);
 	}
 	
-	@Override
-	public Component getComponent() {
-		return frame;
+	public void prepare(Component c) {
+		prepare((Frame) c);
 	}
 	
-	@Override
-	public void setComponent(Component c) {
-		this.setComponent((Frame) c);
+	public abstract void prepare(Frame f);
+	
+	public void draw(Component c) {
+		draw((Frame) c);
 	}
 	
-	public void setComponent(Frame f) {
-		this.frame = f;
+	public abstract void draw(Frame f);
+	
+	public void postDraw(Component c) {
+		postDraw((Frame) c);
 	}
+	
+	public abstract void postDraw(Frame f);
 
 }

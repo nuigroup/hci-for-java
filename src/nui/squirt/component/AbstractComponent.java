@@ -57,9 +57,9 @@ public abstract class AbstractComponent implements Component {
 	}
 	
 	public void render() {
-		getRenderer().prepare();
-		getRenderer().draw();
-		getRenderer().postDraw();
+		getRenderer().prepare(this);
+		getRenderer().draw(this);
+		getRenderer().postDraw(this);
 	}
 	
 }

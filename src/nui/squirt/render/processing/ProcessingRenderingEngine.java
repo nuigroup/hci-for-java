@@ -40,15 +40,15 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 	}
 
 	public FrameRenderer getFrameRenderer(Frame f) {
-		return new ProcessingFrameRenderer(this, f);
+		return new ProcessingFrameRenderer(this);
 	}
 
 	public ButtonRenderer getButtonRenderer(Button b) {
-		return new ProcessingButtonRenderer(this, b);
+		return new ProcessingButtonRenderer(this);
 	}
 
 	public LabelRenderer getLabelRenderer(Label l) {
-		return new ProcessingLabelRenderer(this, l);
+		return new ProcessingLabelRenderer(this);
 	}
 
 	public void performTranslation(Component c) {

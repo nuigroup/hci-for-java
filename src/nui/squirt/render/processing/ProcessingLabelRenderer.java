@@ -7,28 +7,27 @@ import processing.core.PApplet;
 
 public class ProcessingLabelRenderer extends LabelRenderer {
 
-	public ProcessingLabelRenderer(RenderingEngine e, Label l) {
-		super(e, l);
+	public ProcessingLabelRenderer(RenderingEngine e) {
+		super(e);
 	}
 
-	public void prepare() {
+	public void prepare(Label l) {
 		ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
-		engine.performTranslation(getComponent());
+		engine.performTranslation(l);
 	}
 
-	public void draw() {
+	public void draw(Label l) {
 		ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
 		PApplet pApplet = engine.getPApplet();
 		
-		Label label = (Label) getComponent();
 		pApplet.textFont(engine.getFont());
 		pApplet.textMode(PApplet.MODEL);
 		pApplet.textAlign(PApplet.CENTER, PApplet.CENTER);
 		pApplet.fill(25);
-		pApplet.text(label.getText(), 0, 0);
+		pApplet.text(l.getText(), 0, 0);
 	}
 
-	public void postDraw() {
+	public void postDraw(Label l) {
 		ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
 		engine.undoTranslation();
 	}

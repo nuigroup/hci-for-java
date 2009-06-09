@@ -7,28 +7,27 @@ import processing.core.PApplet;
 
 public class ProcessingFrameRenderer extends FrameRenderer {
 
-	public ProcessingFrameRenderer(RenderingEngine e, Frame f) {
-		super(e, f);
+	public ProcessingFrameRenderer(RenderingEngine e) {
+		super(e);
 	}
 	
-	public void prepare() {
+	public void prepare(Frame f) {
 		ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
-		engine.performTranslation(getComponent());
+		engine.performTranslation(f);
 	}
 
-	public void draw() {
+	public void draw(Frame f) {
 		ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
 		PApplet pApplet = engine.getPApplet();
 		
 		// Draw a rectangle representing the frame
-		Frame f = (Frame) getComponent();
 		pApplet.rectMode(PApplet.CENTER);
 		pApplet.noStroke();
 		pApplet.fill(75, 75, 75, 150);
 		pApplet.rect(0, 0, f.getWidth(), f.getHeight());
 	}
 
-	public void postDraw() {
+	public void postDraw(Frame f) {
 		ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
 		engine.undoTranslation();
 	}

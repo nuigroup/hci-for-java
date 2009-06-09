@@ -3,28 +3,28 @@ package nui.squirt.render;
 import nui.squirt.Component;
 import nui.squirt.component.Button;
 
-
 public abstract class ButtonRenderer extends AbstractRenderer {
-	
-	private Button button;
 
-	public ButtonRenderer(RenderingEngine e, Button b) {
+	public ButtonRenderer(RenderingEngine e) {
 		super(e);
-		this.setComponent(b);
 	}
 	
-	@Override
-	public Component getComponent() {
-		return button;
+	public void prepare(Component c) {
+		prepare((Button) c);
 	}
 	
-	@Override
-	public void setComponent(Component c) {
-		this.setComponent((Button) c);
+	public abstract void prepare(Button b);
+	
+	public void draw(Component c) {
+		draw((Button) c);
 	}
 	
-	public void setComponent(Button b) {
-		this.button = b;
+	public abstract void draw(Button b);
+	
+	public void postDraw(Component c) {
+		postDraw((Button) c);
 	}
+	
+	public abstract void postDraw(Button b);
 
 }
