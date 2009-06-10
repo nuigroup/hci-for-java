@@ -3,6 +3,7 @@ package nui.squirt.render;
 import nui.squirt.Component;
 import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
+import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 
 public interface RenderingEngine {
@@ -12,5 +13,6 @@ public interface RenderingEngine {
 	public LabelRenderer getLabelRenderer(Label l);
 	public FrameRenderer getFrameRenderer(Frame f);
 	public ButtonRenderer getButtonRenderer(Button b);
+	public KnobRenderer getKnobRenderer(Knob k);
 
 }

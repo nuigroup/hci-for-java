@@ -12,6 +12,8 @@ public abstract class AbstractRenderingEngine implements RenderingEngine {
 			return getFrameRenderer((Frame) c);
 		else if (c instanceof Button)
 			return getButtonRenderer((Button) c);
+		else if (c instanceof Knob)
+			return getKnobRenderer((Knob) c);
 		else return null;
 	}
 

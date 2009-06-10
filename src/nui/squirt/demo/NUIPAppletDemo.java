@@ -3,6 +3,7 @@ package nui.squirt.demo;
 import nui.squirt.NUIController;
 import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
+import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.render.processing.ProcessingRenderingEngine;
 import processing.core.PApplet;
@@ -28,9 +29,14 @@ public class NUIPAppletDemo extends PApplet {
 	private Frame f, f1, f2;
 	private Label sin;
 	
+	private Knob k;
+	private Label knobLabel;
+	private float diff = (float) 0.01;
+	
 	private PImage img;
 
 	private Button moving;
+
 	
 	@Override
 	public void setup() {
@@ -70,6 +76,15 @@ public class NUIPAppletDemo extends PApplet {
 		controller.addComponent(f2);
 		
 		moving = new Button(90, -90, "Elusive");
+		
+		Frame f3 = new Frame(width/4, height/4, Math.max(width/6, height/6), Math.max(width/6, height/6));
+		k = new Knob(0, 0, f3.getHeight()/2, 0, 100, -((float) Math.PI)*3/4, ((float) Math.PI)/2, 50);
+//		k = new Knob(0, 0, f3.getHeight()/2, 0, 100, 50);
+		knobLabel = new Label(0, f3.getHeight()*3/8, Float.toString(k.getValue()));
+		NUIController.setParentChildPair(f3, k);
+		NUIController.setParentChildPair(f3, knobLabel);
+		
+		controller.addComponent(f3);
 	}
 	
 	@Override
@@ -83,10 +98,19 @@ public class NUIPAppletDemo extends PApplet {
 		sin.setText(Float.toString(s));
 		f.setScale(s);
 		
-		if (f.getRotation()%TWO_PI < 0.01)
+		if (f.getRotation()%TWO_PI < 0.01) {
 			NUIController.setParentChildPair(f, moving);
-		else if (f.getRotation()%PI < 0.01)
+			if (diff == (float) 0.01)
+				diff = (float) -0.01;
+			else diff = (float) 0.01;
+		}
+		else if (f.getRotation()%PI < 0.01) {
 			NUIController.endParentChildPair(f, moving);
+		}
+		
+
+		k.setRotation((float) (k.getRotation()+diff));
+		knobLabel.setText(Float.toString(k.getValue()));
 		
 		controller.render();
 	}

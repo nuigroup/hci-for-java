@@ -3,10 +3,12 @@ package nui.squirt.render.processing;
 import nui.squirt.Component;
 import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
+import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.render.AbstractRenderingEngine;
 import nui.squirt.render.ButtonRenderer;
 import nui.squirt.render.FrameRenderer;
+import nui.squirt.render.KnobRenderer;
 import nui.squirt.render.LabelRenderer;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -49,6 +51,10 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 
 	public LabelRenderer getLabelRenderer(Label l) {
 		return new ProcessingLabelRenderer(this);
+	}
+	
+	public KnobRenderer getKnobRenderer(Knob k) {
+		return new ProcessingKnobRenderer(this);
 	}
 
 	public void performTranslation(Component c) {
