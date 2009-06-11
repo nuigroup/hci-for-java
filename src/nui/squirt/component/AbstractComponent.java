@@ -9,7 +9,6 @@ public abstract class AbstractComponent implements Component {
 	protected float y;
 	protected Container parent;
 	protected float rotation = 0;
-	protected float scale = 1;
 	
 	public AbstractComponent(float x, float y) {
 		this.x = x;
@@ -46,14 +45,6 @@ public abstract class AbstractComponent implements Component {
 
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
-	}
-
-	public float getScale() {
-		return scale;
-	}
-
-	public void setScale(float scale) {
-		this.scale = scale;
 	}
 	
 	public void render() {

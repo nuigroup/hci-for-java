@@ -1,6 +1,7 @@
 package nui.squirt.render.processing;
 
 import nui.squirt.Component;
+import nui.squirt.Scalable;
 import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
 import nui.squirt.component.Knob;
@@ -64,7 +65,8 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 		// Perform translation
 		pApplet.translate(c.getX(), c.getY());
 		pApplet.rotate(c.getRotation());
-		pApplet.scale(c.getScale());
+		if (c instanceof Scalable)
+			pApplet.scale(((Scalable) c).getScale());
 	}
 
 	public void undoTranslation() {

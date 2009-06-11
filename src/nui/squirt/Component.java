@@ -18,9 +18,6 @@ public interface Component {
 	public void setRotation(float theta);
 	public float getRotation();
 	
-	public void setScale(float scale);
-	public float getScale();
-	
 	public void render();
 
 }

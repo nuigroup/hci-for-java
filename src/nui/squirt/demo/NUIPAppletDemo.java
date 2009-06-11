@@ -27,7 +27,6 @@ public class NUIPAppletDemo extends PApplet {
 	
 	private NUIController controller;
 	private Frame f, f1, f2;
-	private Label sin;
 	
 	private Knob k;
 	private Label knobLabel;
@@ -60,11 +59,6 @@ public class NUIPAppletDemo extends PApplet {
 		NUIController.setParentChildPair(f, new Label(0, 0, "Frame0"));
 		NUIController.setParentChildPair(f, new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
 		NUIController.setParentChildPair(f, new Button(50, -50, "Button"));
-		Frame angle = new Frame(0, f.getHeight()/4, f.getWidth()/2, f.getHeight()/4);
-		sin = new Label(0, angle.getHeight()/4, Float.toString(sin(f.getRotation())));
-		NUIController.setParentChildPair(angle, new Label(0, -angle.getHeight()/4, "Scale"));
-		NUIController.setParentChildPair(angle, sin);
-		NUIController.setParentChildPair(f, angle);
 		
 		f1 = new Frame(width*3/4+width/8, height/2+height/8, width/8, height/8);
 		controller.addComponent(f1);
@@ -79,7 +73,6 @@ public class NUIPAppletDemo extends PApplet {
 		
 		Frame f3 = new Frame(width/4, height/4, Math.max(width/6, height/6), Math.max(width/6, height/6));
 		k = new Knob(0, 0, f3.getHeight()/2, 0, 100, -((float) Math.PI)*3/4, ((float) Math.PI)/2, 50);
-//		k = new Knob(0, 0, f3.getHeight()/2, 0, 100, 50);
 		knobLabel = new Label(0, f3.getHeight()*3/8, Float.toString(k.getValue()));
 		NUIController.setParentChildPair(f3, k);
 		NUIController.setParentChildPair(f3, knobLabel);
@@ -94,9 +87,6 @@ public class NUIPAppletDemo extends PApplet {
 		image(img, width/2, height/2);
 		
 		f.setRotation((float) (f.getRotation()+0.01));
-		float s = sin(f.getRotation());
-		sin.setText(Float.toString(s));
-		f.setScale(s);
 		
 		if (f.getRotation()%TWO_PI < 0.01) {
 			NUIController.setParentChildPair(f, moving);
