@@ -6,11 +6,13 @@ import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
+import nui.squirt.component.Slider;
 import nui.squirt.render.AbstractRenderingEngine;
 import nui.squirt.render.ButtonRenderer;
 import nui.squirt.render.FrameRenderer;
 import nui.squirt.render.KnobRenderer;
 import nui.squirt.render.LabelRenderer;
+import nui.squirt.render.SliderRenderer;
 import processing.core.PApplet;
 import processing.core.PFont;
 
@@ -23,6 +25,7 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 	private ButtonRenderer buttonRenderer;
 	private LabelRenderer labelRenderer;
 	private KnobRenderer knobRenderer;
+	private SliderRenderer sliderRenderer;
 
 	public ProcessingRenderingEngine(PApplet p) {
 		this.setPApplet(p);
@@ -69,6 +72,12 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 		if (knobRenderer == null)
 			knobRenderer = new ProcessingKnobRenderer(this);
 		return knobRenderer;
+	}
+
+	public SliderRenderer getSliderRenderer(Slider s) {
+		if (sliderRenderer == null)
+			sliderRenderer = new ProcessingSliderRenderer(this);
+		return sliderRenderer;
 	}
 
 	public void performTranslation(Component c) {

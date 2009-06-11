@@ -5,6 +5,7 @@ import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
+import nui.squirt.component.Slider;
 
 public interface RenderingEngine {
 
@@ -14,5 +15,6 @@ public interface RenderingEngine {
 	public FrameRenderer getFrameRenderer(Frame f);
 	public ButtonRenderer getButtonRenderer(Button b);
 	public KnobRenderer getKnobRenderer(Knob k);
+	public SliderRenderer getSliderRenderer(Slider s);
 
 }
