@@ -18,6 +18,11 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 	
 	private PApplet pApplet;
 	private PFont font;
+	
+	private FrameRenderer frameRenderer;
+	private ButtonRenderer buttonRenderer;
+	private LabelRenderer labelRenderer;
+	private KnobRenderer knobRenderer;
 
 	public ProcessingRenderingEngine(PApplet p) {
 		this.setPApplet(p);
@@ -43,19 +48,27 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 	}
 
 	public FrameRenderer getFrameRenderer(Frame f) {
-		return new ProcessingFrameRenderer(this);
+		if (frameRenderer == null)
+			frameRenderer = new ProcessingFrameRenderer(this);
+		return frameRenderer;
 	}
 
 	public ButtonRenderer getButtonRenderer(Button b) {
-		return new ProcessingButtonRenderer(this);
+		if (buttonRenderer == null)
+			buttonRenderer = new ProcessingButtonRenderer(this);
+		return buttonRenderer;
 	}
 
 	public LabelRenderer getLabelRenderer(Label l) {
-		return new ProcessingLabelRenderer(this);
+		if (labelRenderer == null)
+			labelRenderer = new ProcessingLabelRenderer(this);
+		return labelRenderer;
 	}
 	
 	public KnobRenderer getKnobRenderer(Knob k) {
-		return new ProcessingKnobRenderer(this);
+		if (knobRenderer == null)
+			knobRenderer = new ProcessingKnobRenderer(this);
+		return knobRenderer;
 	}
 
 	public void performTranslation(Component c) {
