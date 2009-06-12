@@ -16,6 +16,8 @@ public abstract class AbstractRenderingEngine implements RenderingEngine {
 			return getKnobRenderer((Knob) c);
 		else if (c instanceof Slider)
 			return getSliderRenderer((Slider) c);
+		else if (c instanceof Image)
+			return getImageRenderer((Image) c);
 		else return null;
 	}
 

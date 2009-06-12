@@ -4,12 +4,14 @@ import nui.squirt.Component;
 import nui.squirt.Scalable;
 import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
+import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.component.Slider;
 import nui.squirt.render.AbstractRenderingEngine;
 import nui.squirt.render.ButtonRenderer;
 import nui.squirt.render.FrameRenderer;
+import nui.squirt.render.ImageRenderer;
 import nui.squirt.render.KnobRenderer;
 import nui.squirt.render.LabelRenderer;
 import nui.squirt.render.SliderRenderer;
@@ -26,6 +28,7 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 	private LabelRenderer labelRenderer;
 	private KnobRenderer knobRenderer;
 	private SliderRenderer sliderRenderer;
+	private ImageRenderer imageRenderer;
 
 	public ProcessingRenderingEngine(PApplet p) {
 		this.setPApplet(p);
@@ -78,6 +81,12 @@ public class ProcessingRenderingEngine extends AbstractRenderingEngine {
 		if (sliderRenderer == null)
 			sliderRenderer = new ProcessingSliderRenderer(this);
 		return sliderRenderer;
+	}
+
+	public ImageRenderer getImageRenderer(Image i) {
+		if (imageRenderer == null)
+			imageRenderer = new ProcessingImageRenderer(this);
+		return imageRenderer;
 	}
 
 	public void performTranslation(Component c) {

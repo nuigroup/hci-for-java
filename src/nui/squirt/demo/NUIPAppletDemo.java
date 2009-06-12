@@ -3,12 +3,12 @@ package nui.squirt.demo;
 import nui.squirt.NUIController;
 import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
+import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.component.Slider;
 import nui.squirt.render.processing.ProcessingRenderingEngine;
 import processing.core.PApplet;
-import processing.core.PImage;
 
 
 /* 
@@ -36,7 +36,8 @@ public class NUIPAppletDemo extends PApplet {
 	private Slider s;
 	private Label sLabel;
 	
-	private PImage img;
+	private Image img;
+//	private PImage img;
 
 	private Button moving;
 
@@ -49,14 +50,18 @@ public class NUIPAppletDemo extends PApplet {
 		ellipseMode(CENTER);
 		imageMode(CENTER);
 		
-		img = createImage(height-80, height-100, RGB);
-		img.loadPixels();
-		for (int i = 0; i < img.pixels.length; i++) {
-			img.pixels[i] = color(random(255), random(255), random(255));
-		}
-		img.updatePixels();
+//		img = createImage(height-80, height-100, RGB);
+//		img.loadPixels();
+//		for (int i = 0; i < img.pixels.length; i++) {
+//			img.pixels[i] = color(random(255), random(255), random(255));
+//		}
+//		img.updatePixels();
 		
 		controller = new NUIController(new ProcessingRenderingEngine(this));
+		
+		img = new Image(width/2, height/2, "squirtUI.png", width/2, height/2);
+		img.setScale((float) 0.5);
+		controller.addComponent(img);
 		
 		f = new Frame(width/2, height/2, width/2, height/2);
 		controller.addComponent(f);
@@ -97,7 +102,7 @@ public class NUIPAppletDemo extends PApplet {
 	public void draw() {
 		background(255);
 		imageMode(CENTER);
-		image(img, width/2, height/2);
+//		image(img, width/2, height/2);
 		
 		f.setRotation((float) (f.getRotation()+0.01));
 		
@@ -111,7 +116,8 @@ public class NUIPAppletDemo extends PApplet {
 			NUIController.endParentChildPair(f, moving);
 		}
 		
-
+		img.setRotation(img.getRotation()+diff);
+		
 		k.setRotation((float) (k.getRotation()+diff));
 		knobLabel.setText(Float.toString(k.getValue()));
 		
