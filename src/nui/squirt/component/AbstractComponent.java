@@ -9,6 +9,7 @@ public abstract class AbstractComponent implements Component {
 	protected float y;
 	protected Container parent;
 	protected float rotation = 0;
+	protected boolean visible = true;
 	
 	public AbstractComponent(float x, float y) {
 		this.x = x;
@@ -47,10 +48,20 @@ public abstract class AbstractComponent implements Component {
 		this.rotation = rotation;
 	}
 	
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	public void render() {
-		getRenderer().prepare(this);
-		getRenderer().draw(this);
-		getRenderer().postDraw(this);
+		if (isVisible()) {
+			getRenderer().prepare(this);
+			getRenderer().draw(this);
+			getRenderer().postDraw(this);
+		}
 	}
 	
 }

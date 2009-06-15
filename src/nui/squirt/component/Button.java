@@ -43,10 +43,12 @@ public class Button extends AbstractComponent {
 
 	@Override
 	public void render() {
-		getRenderer().prepare(this);
-		getRenderer().draw(this);
-		getLabel().render();
-		getRenderer().postDraw(this);
+		if (isVisible()) {
+			getRenderer().prepare(this);
+			getRenderer().draw(this);
+			getLabel().render();
+			getRenderer().postDraw(this);
+		}
 	}
 	
 }

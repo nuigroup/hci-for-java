@@ -18,6 +18,9 @@ public interface Component {
 	public void setRotation(float theta);
 	public float getRotation();
 	
+	public void setVisible(boolean v);
+	public boolean isVisible();
+	
 	public void render();
 
 }

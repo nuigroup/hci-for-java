@@ -35,15 +35,17 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 	}
 	
 	public void render() {
-		this.getRenderer().prepare(this);
-		
-		this.getRenderer().draw(this);
-		
-		for (Component c: children) {
-			c.render();
+		if (isVisible()) {
+			this.getRenderer().prepare(this);
+			
+			this.getRenderer().draw(this);
+			
+			for (Component c: children) {
+				c.render();
+			}
+			
+			this.getRenderer().postDraw(this);
 		}
-		
-		this.getRenderer().postDraw(this);
 	}
 
 }

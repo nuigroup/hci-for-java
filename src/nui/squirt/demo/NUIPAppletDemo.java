@@ -37,7 +37,6 @@ public class NUIPAppletDemo extends PApplet {
 	private Label sLabel;
 	
 	private Image img;
-//	private PImage img;
 
 	private Button moving;
 
@@ -49,13 +48,6 @@ public class NUIPAppletDemo extends PApplet {
 		rectMode(CENTER);
 		ellipseMode(CENTER);
 		imageMode(CENTER);
-		
-//		img = createImage(height-80, height-100, RGB);
-//		img.loadPixels();
-//		for (int i = 0; i < img.pixels.length; i++) {
-//			img.pixels[i] = color(random(255), random(255), random(255));
-//		}
-//		img.updatePixels();
 		
 		controller = new NUIController(new ProcessingRenderingEngine(this));
 		
@@ -102,7 +94,6 @@ public class NUIPAppletDemo extends PApplet {
 	public void draw() {
 		background(255);
 		imageMode(CENTER);
-//		image(img, width/2, height/2);
 		
 		f.setRotation((float) (f.getRotation()+0.01));
 		
@@ -111,9 +102,11 @@ public class NUIPAppletDemo extends PApplet {
 			if (diff == (float) 0.01)
 				diff = (float) -0.01;
 			else diff = (float) 0.01;
+			f2.setVisible(false);
 		}
 		else if (f.getRotation()%PI < 0.01) {
 			NUIController.endParentChildPair(f, moving);
+			f2.setVisible(true);
 		}
 		
 		img.setRotation(img.getRotation()+diff);
