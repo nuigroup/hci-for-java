@@ -32,8 +32,8 @@ public class ProcessingButtonRenderer extends ButtonRenderer {
 		
 		b.getLabel().setY(h * ((float) -0.1));
 		
-		pApplet.fill(170);
-		pApplet.stroke(230);
+		pApplet.fill(b.isPressed() ? 170: 200);
+		pApplet.stroke(50);
 		pApplet.rect(0, 0, w, h);
 	}
 

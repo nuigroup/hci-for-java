@@ -1,15 +1,18 @@
 package nui.squirt.component;
 
+import nui.squirt.event.ActionEvent;
 import nui.squirt.render.ButtonRenderer;
 import nui.squirt.render.Renderer;
 import nui.squirt.render.RenderingEngine;
 
 
-public class Button extends AbstractComponent {
+public class Button extends AbstractActionable {
 	
 	private ButtonRenderer renderer;
 	
 	private Label label;
+
+	private boolean pressed;
 	
 	public Button(float x, float y, String l) {
 		super(x, y);
@@ -41,6 +44,10 @@ public class Button extends AbstractComponent {
 		getLabel().setText(text);
 	}
 
+	public boolean isPressed() {
+		return pressed;
+	}
+
 	@Override
 	public void render() {
 		if (isVisible()) {
@@ -49,6 +56,15 @@ public class Button extends AbstractComponent {
 			getLabel().render();
 			getRenderer().postDraw(this);
 		}
+	}
+	
+	public void press() {
+		this.pressed = true;
+	}
+	
+	public void release() {
+		this.pressed = false;
+		fireAction(new ActionEvent(this));
 	}
 	
 }
