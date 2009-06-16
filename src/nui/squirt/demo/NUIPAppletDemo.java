@@ -7,6 +7,10 @@ import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.component.Slider;
+import nui.squirt.event.ActionEvent;
+import nui.squirt.event.ValueEvent;
+import nui.squirt.listener.ActionListener;
+import nui.squirt.listener.ValueListener;
 import nui.squirt.render.processing.ProcessingRenderingEngine;
 import processing.core.PApplet;
 
@@ -30,15 +34,17 @@ public class NUIPAppletDemo extends PApplet {
 	private Frame f, f1, f2;
 	
 	private Knob k;
-	private Label knobLabel;
+	private ValueLabel knobLabel;
 	private float diff = (float) 0.01;
 	
 	private Slider s;
-	private Label sLabel;
+	private ValueLabel sLabel;
 	
 	private Image img;
 
 	private Button moving;
+	
+	private Button b;
 
 	
 	@Override
@@ -74,7 +80,8 @@ public class NUIPAppletDemo extends PApplet {
 		
 		Frame f3 = new Frame(width/4, height/4, Math.max(width/6, height/6), Math.max(width/6, height/6));
 		k = new Knob(0, 0, f3.getHeight()/2, 0, 100, -((float) Math.PI)*3/4, ((float) Math.PI)/2, 50);
-		knobLabel = new Label(0, f3.getHeight()*3/8, Float.toString(k.getValue()));
+		knobLabel = new ValueLabel(0, f3.getHeight()*3/8, Float.toString(k.getValue()));
+		k.addValueListener(knobLabel);
 		NUIController.setParentChildPair(f3, k);
 		NUIController.setParentChildPair(f3, knobLabel);
 		
@@ -83,11 +90,15 @@ public class NUIPAppletDemo extends PApplet {
 		Frame f4 = new Frame(width/2, height*7/8, width*7/8, height*7/32);
 		s = new Slider(0, 0, width*3/4, 0, 100, 75);
 		s.setRotation((float) (PI*0.9/2));
-		sLabel = new Label(0, f4.getHeight()/4, Float.toString(s.getValue()));
+		sLabel = new ValueLabel(0, f4.getHeight()/4, Float.toString(s.getValue()));
+		s.addValueListener(sLabel);
 		NUIController.setParentChildPair(f4, s);
 		NUIController.setParentChildPair(f4, sLabel);
-		
 		controller.addComponent(f4);
+		
+		b = new Button(width/4, height/2, "Not Pressed");
+		b.addActionListener(new ButtonLabelChanger());
+		controller.addComponent(b);
 	}
 	
 	@Override
@@ -103,10 +114,12 @@ public class NUIPAppletDemo extends PApplet {
 				diff = (float) -0.01;
 			else diff = (float) 0.01;
 			f2.setVisible(false);
+			b.press();
 		}
 		else if (f.getRotation()%PI < 0.01) {
 			NUIController.endParentChildPair(f, moving);
 			f2.setVisible(true);
+			b.release();
 		}
 		
 		img.setRotation(img.getRotation()+diff);
@@ -122,5 +135,34 @@ public class NUIPAppletDemo extends PApplet {
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{ "--present", "nui.squirt.demo.NUIPAppletDemo" });
+	}
+
+	public class ValueLabel extends Label implements ValueListener {
+		
+	
+		public ValueLabel(float x, float y, String t) {
+			super(x, y, t);
+		}
+	
+		public void valueChanged(ValueEvent e) {
+			super.setText(Float.toString(e.getNewValue()));
+		}
+		
+		@Override
+		public void setText(String t) {
+			// Empty. We don't want anything external to change the text of this Label.
+		}
+	
+	}
+
+	public class ButtonLabelChanger implements ActionListener {
+		
+		int pressCount = 0;
+	
+		public void actionPerformed(ActionEvent e) {
+			Button butt = (Button) e.getSource();
+			butt.setText("Pressed " + ++pressCount + " times");
+		}
+	
 	}
 }
