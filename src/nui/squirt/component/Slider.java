@@ -1,9 +1,10 @@
 package nui.squirt.component;
 
+import nui.squirt.event.ValueEvent;
 import nui.squirt.render.Renderer;
 import nui.squirt.render.SliderRenderer;
 
-public class Slider extends AbstractComponent {
+public class Slider extends AbstractValuable {
 
 	private SliderRenderer renderer;
 	
@@ -90,12 +91,18 @@ public class Slider extends AbstractComponent {
 	}
 
 	public void setValue(float value) {
+		ValueEvent e = new ValueEvent(this);
+		e.setOldValue(getValue());
+		
 		float v = value;
 		if (value > getMaxValue())
 			v = getMaxValue();
 		else if (value < getMinValue())
 			v = getMinValue();
 		this.value = v;
+		
+		e.setNewValue(getValue());
+		fireValueChanged(e);
 	}
 
 	public float getValueRange() {

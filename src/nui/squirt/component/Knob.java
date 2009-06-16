@@ -1,9 +1,10 @@
 package nui.squirt.component;
 
+import nui.squirt.event.ValueEvent;
 import nui.squirt.render.KnobRenderer;
 import nui.squirt.render.Renderer;
 
-public class Knob extends AbstractComponent {
+public class Knob extends AbstractValuable {
 	
 	private KnobRenderer renderer;
 	
@@ -12,6 +13,8 @@ public class Knob extends AbstractComponent {
 	private float maxValue = 1;
 	private float minAngle = 0;
 	private float maxAngle = (float) (2 * Math.PI);
+	
+	private float value = 0;
 
 	public Knob(float x, float y, float r) {
 		super(x, y);
@@ -22,23 +25,23 @@ public class Knob extends AbstractComponent {
 		this(x, y, r);
 		this.maxValue = maxValue;
 		this.minValue = minValue;
+		setValue(getMinValue());
 	}
 	
 	public Knob(float x, float y, float r, float minValue, float maxValue, float initValue) {
 		this(x, y, r, minValue, maxValue);
-		setRotation(getAngleRange() * (initValue-getMinValue())/getValueRange());
+		setValue(initValue);
 	}
 	
 	public Knob(float x, float y, float r, float minValue, float maxValue, float minAngle, float maxAngle) {
 		this(x, y, r, minValue, maxValue);
 		this.minAngle = minAngle;
 		this.maxAngle = maxAngle;
-		setRotation(getMinAngle());
 	}
 	
 	public Knob(float x, float y, float r, float minValue, float maxValue, float minAngle, float maxAngle, float initValue) {
 		this(x, y, r, minValue, maxValue, minAngle, maxAngle);
-		setRotation(getAngleRange() * (initValue-getMinValue())/getValueRange());
+		setValue(initValue);
 	}
 
 	public Renderer getRenderer() {
@@ -102,9 +105,31 @@ public class Knob extends AbstractComponent {
 	}
 
 	public float getValue() {
-		return (getRotation()-getMinAngle())/getAngleRange() * getValueRange() + getMinValue();
+		return value;
 	}
 	
+	public void setValue(float value) {
+		ValueEvent e = new ValueEvent(this);
+		e.setOldValue(getValue());
+		
+		float v = value;
+		
+		if (value > getMaxValue())
+			v = getMaxValue();
+		else if (value < getMinValue())
+			v = getMinValue();
+		
+		this.value = v;
+		
+		e.setNewValue(getValue());
+		fireValueChanged(e);
+	}
+	
+	@Override
+	public float getRotation() {
+		return getAngleRange() * (getValue()-getMinValue())/getValueRange() + getMinAngle();
+	}
+
 	@Override
 	public void setRotation(float rotation) {
 		float r = rotation;
@@ -114,7 +139,7 @@ public class Knob extends AbstractComponent {
 		else if (rotation < getMinAngle())
 			r = getMinAngle();
 		
-		super.setRotation(r);
+		setValue((r-getMinAngle())/getAngleRange() * getValueRange() + getMinValue());
 	}
 
 }
