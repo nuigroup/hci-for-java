@@ -12,9 +12,6 @@ public interface Component {
 	public void setY(float y);
 	public float getY();
 	
-	public void setParent(Container parent);
-	public Container getParent();
-	
 	public void setRotation(float theta);
 	public float getRotation();
 	

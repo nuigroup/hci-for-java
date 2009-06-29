@@ -1,13 +1,11 @@
 package nui.squirt.component;
 
 import nui.squirt.Component;
-import nui.squirt.Container;
 
 public abstract class AbstractComponent implements Component {
 	
 	protected float x;
 	protected float y;
-	protected Container parent;
 	protected float rotation = 0;
 	protected boolean visible = true;
 	
@@ -30,14 +28,6 @@ public abstract class AbstractComponent implements Component {
 
 	public void setY(float y) {
 		this.y = y;
-	}
-
-	public Container getParent() {
-		return parent;
-	}
-
-	public void setParent(Container parent) {
-		this.parent = parent;
 	}
 
 	public float getRotation() {

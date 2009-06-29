@@ -63,17 +63,17 @@ public class NUIPAppletDemo extends PApplet {
 		
 		f = new Frame(width/2, height/2, width/2, height/2);
 		controller.addComponent(f);
-		NUIController.setParentChildPair(f, new Label(0, 0, "Frame0"));
-		NUIController.setParentChildPair(f, new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
-		NUIController.setParentChildPair(f, new Button(50, -50, "Button"));
+		f.addChild(new Label(0, 0, "Frame0"));
+		f.addChild(new Label(60-f.getWidth()/2, 30-f.getHeight()/2, "Label"));
+		f.addChild(new Button(50, -50, "Button"));
 		
 		f1 = new Frame(width*3/4+width/8, height/2+height/8, width/8, height/8);
 		controller.addComponent(f1);
-		NUIController.setParentChildPair(f1, new Label(0, 0, "Frame1"));
+		f1.addChild(new Label(0, 0, "Frame1"));
 		
 		// Adding sub-component prior to adding to controller
 		f2 = new Frame(width*3/4+width/8, height/4+height/8, width/8, height/8);
-		NUIController.setParentChildPair(f2, new Label(0, 0, "Frame2"));
+		f2.addChild(new Label(0, 0, "Frame2"));
 		controller.addComponent(f2);
 		
 		moving = new Button(120, 120, "Elusive");
@@ -82,8 +82,8 @@ public class NUIPAppletDemo extends PApplet {
 		k = new Knob(0, 0, f3.getHeight()/2, 0, 100, -((float) Math.PI)*3/4, ((float) Math.PI)/2, 50);
 		knobLabel = new ValueLabel(0, f3.getHeight()*3/8, Float.toString(k.getValue()));
 		k.addValueListener(knobLabel);
-		NUIController.setParentChildPair(f3, k);
-		NUIController.setParentChildPair(f3, knobLabel);
+		f3.addChild(k);
+		f3.addChild(knobLabel);
 		
 		controller.addComponent(f3);
 		
@@ -92,8 +92,8 @@ public class NUIPAppletDemo extends PApplet {
 		s.setRotation((float) (PI*0.9/2));
 		sLabel = new ValueLabel(0, f4.getHeight()/4, Float.toString(s.getValue()));
 		s.addValueListener(sLabel);
-		NUIController.setParentChildPair(f4, s);
-		NUIController.setParentChildPair(f4, sLabel);
+		f4.addChild(s);
+		f4.addChild(sLabel);
 		controller.addComponent(f4);
 		
 		b = new Button(width/4, height/2, "Not Pressed");
@@ -109,7 +109,7 @@ public class NUIPAppletDemo extends PApplet {
 		f.setRotation((float) (f.getRotation()+0.01));
 		
 		if (f.getRotation()%TWO_PI < 0.01) {
-			NUIController.setParentChildPair(f, moving);
+			f.addChild(moving);
 			if (diff == (float) 0.01)
 				diff = (float) -0.01;
 			else diff = (float) 0.01;
@@ -117,7 +117,7 @@ public class NUIPAppletDemo extends PApplet {
 			b.press();
 		}
 		else if (f.getRotation()%PI < 0.01) {
-			NUIController.endParentChildPair(f, moving);
+			f.removeChild(moving);
 			f2.setVisible(true);
 			b.release();
 		}
