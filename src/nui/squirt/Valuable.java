@@ -14,4 +14,13 @@ public interface Valuable extends Component {
 	
 	public float getValue();
 	public void setValue(float v);
+	
+	public float getMaxValue();
+	public void setMaxValue(float maxValue);
+	public float getMinValue();
+	public void setMinValue(float minValue);
+	
+	public float getValueRange();
+	
+	public float getCenterValue();
 }

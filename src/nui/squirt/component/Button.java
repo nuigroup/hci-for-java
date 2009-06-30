@@ -1,41 +1,72 @@
 package nui.squirt.component;
 
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+import nui.squirt.Component;
+import nui.squirt.Context;
+import nui.squirt.LayoutManager;
+import nui.squirt.context.spatial.RectangularRegionContext;
 import nui.squirt.event.ActionEvent;
-import nui.squirt.render.ButtonRenderer;
-import nui.squirt.render.Renderer;
-import nui.squirt.render.RenderingEngine;
 
 
 public class Button extends AbstractActionable {
 	
-	private ButtonRenderer renderer;
+	private class ButtonLayoutManager implements LayoutManager {
+		private RectangularRegionContext labelContext;
+		
+		public Collection<Context> getContexts() {
+			Collection<Context> contexts = new ArrayList<Context>();
+			contexts.add(labelContext);
+			return Collections.unmodifiableCollection(contexts);
+		}
+		
+		public void layout(Context t) {
+			if (t instanceof RectangularRegionContext && t.getComponent() == Button.this) {
+				RectangularRegionContext r = (RectangularRegionContext) t;
+				
+				// Layout the context for the label
+				Dimension preferred = getLabel().getPreferredSize();
+				labelContext.setWidth(preferred.width);
+				labelContext.setHeight(preferred.height);
+				labelContext.setRotation(0);
+				labelContext.setScale(1);
+				labelContext.setX(-5);
+				labelContext.setY(0);
+				labelContext.setParentComponent(Button.this);
+				
+				// Update the Context for the Button
+				r.setWidth(labelContext.getWidth() + 20);
+				r.setHeight(labelContext.getHeight() + 10);
+			}
+		}
+		
+		public Context addComponent(Component c) {
+			if (c == getLabel()) {
+				RectangularRegionContext newContext = new RectangularRegionContext(c, Button.this);
+				newContext.setWidth(c.getPreferredSize().width);
+				newContext.setHeight(c.getPreferredSize().height);
+				c.addContext(newContext);
+				labelContext = newContext;
+				return newContext;
+			}
+			else return null;
+		}
+	}
 	
 	private Label label;
 
 	private boolean pressed;
 	
-	public Button(float x, float y, String l) {
-		super(x, y);
-		this.label = new Label(0, 0, l);
+	private LayoutManager buttonLayout = new ButtonLayoutManager();
+	
+	public Button(String text) {
+		this.label = new Label(text);
+		getLayout().addComponent(this.label);
 	}
 
-	public Renderer getRenderer() {
-		return renderer;
-	}
-	
-	public void setRenderer(Renderer renderer) {
-		this.setRenderer((ButtonRenderer) renderer);
-	}
-	
-	public void setRenderer(ButtonRenderer r) {
-		this.renderer = r;
-		RenderingEngine e = renderer.getRenderingEngine();
-		Renderer labelRenderer = label.getRenderer();
-		if (labelRenderer == null || !labelRenderer.getRenderingEngine().equals(e)) {
-			label.setRenderer(e.getRenderer(label));
-		}
-	}
-	
 	public Label getLabel() {
 		return label;
 	}
@@ -47,16 +78,6 @@ public class Button extends AbstractActionable {
 	public boolean isPressed() {
 		return pressed;
 	}
-
-	@Override
-	public void render() {
-		if (isVisible()) {
-			getRenderer().prepare(this);
-			getRenderer().draw(this);
-			getLabel().render();
-			getRenderer().postDraw(this);
-		}
-	}
 	
 	public void press() {
 		this.pressed = true;
@@ -65,6 +86,10 @@ public class Button extends AbstractActionable {
 	public void release() {
 		this.pressed = false;
 		fireAction(new ActionEvent(this));
+	}
+
+	public LayoutManager getLayout() {
+		return buttonLayout;
 	}
 	
 }

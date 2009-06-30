@@ -3,7 +3,7 @@ package nui.squirt.render;
 
 public abstract class AbstractRenderer implements Renderer {
 	
-	protected RenderingEngine engine;
+	private RenderingEngine engine;
 	
 	public AbstractRenderer(RenderingEngine e) {
 		this.engine = e;

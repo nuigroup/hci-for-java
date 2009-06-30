@@ -46,8 +46,8 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
-    <target name="NUIPAppletDemo">
-        <java classname="nui.squirt.demo.NUIPAppletDemo" failonerror="true" fork="yes">
+    <target name="Demo">
+        <java classname="nui.squirt.demo.ExperimentDemo" failonerror="true" fork="yes">
             <classpath refid="squirt.classpath"/>
         </java>
     </target>
