@@ -17,7 +17,7 @@ public class Button extends AbstractActionable {
 	private class ButtonLayoutManager implements LayoutManager {
 		private RectangularRegionContext labelContext;
 		
-		public Collection<Context> getContexts() {
+		public Collection<Context> getManagedContexts() {
 			Collection<Context> contexts = new ArrayList<Context>();
 			contexts.add(labelContext);
 			return Collections.unmodifiableCollection(contexts);
@@ -53,6 +53,10 @@ public class Button extends AbstractActionable {
 				return newContext;
 			}
 			else return null;
+		}
+
+		public Context addComponent(Component c, Object constraints) {
+			return addComponent(c);
 		}
 	}
 	

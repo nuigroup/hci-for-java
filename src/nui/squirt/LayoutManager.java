@@ -6,7 +6,9 @@ public interface LayoutManager {
 	
 	public void layout(Context t);
 	
-	public Collection<Context> getContexts();
+	public Collection<Context> getManagedContexts();
 	
 	public Context addComponent(Component c);
+	
+	public Context addComponent(Component c, Object constraints);
 }

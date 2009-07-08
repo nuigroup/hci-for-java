@@ -1,5 +1,7 @@
 package nui.squirt.demo;
 
+import java.awt.geom.Point2D;
+
 import nui.squirt.NUIController;
 import nui.squirt.component.Button;
 import nui.squirt.component.Label;
@@ -47,9 +49,9 @@ public class ExperimentDemo extends PApplet {
 		controller = new NUIController(new ProcessingRenderingEngine(this));
 //		controller.addComponent(f);
 //		controller.addComponent(f1);
-		controller.addComponent(b);
-		controller.addComponent(b.getLabel());
-		controller.addComponent(l);
+		controller.addChild(b, new Point2D.Double(Math.random()*width/2-width/4, Math.random()*height/2-height/4));
+		controller.addChild(b.getLabel(), new Point2D.Double(Math.random()*width/2-width/4, Math.random()*height/2-height/4));
+		controller.addChild(l, new Point2D.Double(Math.random()*width/2-width/4, Math.random()*height/2-height/4));
 	}
 	
 	@Override

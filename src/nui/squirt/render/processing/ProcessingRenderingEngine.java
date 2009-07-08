@@ -133,7 +133,7 @@ public class ProcessingRenderingEngine implements RenderingEngine {
 			
 			// Render the children contexts of this Component
 			if (c.hasLayout()) {
-				for (Context con: c.getLayout().getContexts()) {
+				for (Context con: c.getLayout().getManagedContexts()) {
 					render(con.getComponent(), con);
 				}
 			}

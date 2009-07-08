@@ -5,9 +5,8 @@ import nui.squirt.LayoutManager;
 
 public class Frame extends AbstractContainer {
 
-	public LayoutManager getLayout() {
-		// TODO Auto-generated method stub
-		return null;
+	public Frame(LayoutManager l) {
+		super(l);
 	}
 
 //	private FrameRenderer renderer;

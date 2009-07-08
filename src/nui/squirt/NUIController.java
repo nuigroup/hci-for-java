@@ -1,40 +1,38 @@
 package nui.squirt;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import nui.squirt.context.spatial.RectangularRegionContext;
+import nui.squirt.component.AbstractContainer;
+import nui.squirt.layout.AbsoluteLayout;
 import nui.squirt.render.RenderingEngine;
 
-public class NUIController {
+public class NUIController extends AbstractContainer {
 	
 	private RenderingEngine renderingEngine;
-	private Map<Component, Context> components = new HashMap<Component, Context>();
 
 	public NUIController(RenderingEngine r) {
+		this(r, new AbsoluteLayout());
+	}
+
+	public NUIController(RenderingEngine r, LayoutManager l) {
+		super(l);
 		this.renderingEngine = r;
 	}
 	
-	public void addComponent(Component c) {
-		RectangularRegionContext r = new RectangularRegionContext(c);
-		r.setX((float) (Math.random()*300 - 150));
-		r.setY((float) (Math.random()*300 - 150));
-		r.setWidth(c.getPreferredSize().width);
-		r.setHeight(c.getPreferredSize().height);
-		r.setRotation((float) (Math.random()*Math.PI*2));
-		r.setScale(1);
-		
-		c.addContext(r);
-		components.put(c, r);
-	}
-	
-	public void removeComponent(Component c) {
-		components.remove(c);
-	}
+//	public void addComponent(Component c) {
+//		RectangularRegionContext r = new RectangularRegionContext(c);
+//		r.setX((float) (Math.random()*300 - 150));
+//		r.setY((float) (Math.random()*300 - 150));
+//		r.setWidth(c.getPreferredSize().width);
+//		r.setHeight(c.getPreferredSize().height);
+//		r.setRotation((float) (Math.random()*Math.PI*2));
+//		r.setScale(1);
+//		
+//		c.addContext(r);
+//		components.put(c, r);
+//	}
 
 	public void render() {
-		for (Map.Entry<Component, Context> e: components.entrySet()) {
-			renderingEngine.render(e.getKey(), e.getValue());
+		for (Context c: getLayout().getManagedContexts()) {
+			renderingEngine.render(c.getComponent(), c);
 		}
 	}
 

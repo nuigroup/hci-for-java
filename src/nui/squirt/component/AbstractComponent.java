@@ -11,8 +11,8 @@ public abstract class AbstractComponent implements Component {
 	
 	private Collection<Context> contexts = new ArrayList<Context>();
 	
-	private Dimension maximumSize = new Dimension();
-	private Dimension minimumSize = new Dimension();
+	private Dimension maximumSize = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+	private Dimension minimumSize = new Dimension(Integer.MIN_VALUE, Integer.MIN_VALUE);
 	private Dimension preferredSize = new Dimension();
 	
 	public Dimension getMaximumSize() {

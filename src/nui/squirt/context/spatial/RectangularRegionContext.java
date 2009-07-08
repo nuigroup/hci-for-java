@@ -85,7 +85,7 @@ public class RectangularRegionContext extends SpatialContext {
 
 	public void validate() {
 		if (getComponent().hasLayout()) {
-			for (Context c: getComponent().getLayout().getContexts()) {
+			for (Context c: getComponent().getLayout().getManagedContexts()) {
 				if (c instanceof SpatialContext && !c.isValid())
 					c.validate();
 			}
