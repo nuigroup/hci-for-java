@@ -5,13 +5,8 @@ import nui.squirt.component.Button;
 import nui.squirt.component.Frame;
 import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
-import nui.squirt.component.Label;
 import nui.squirt.component.Slider;
-import nui.squirt.event.ActionEvent;
-import nui.squirt.event.ValueEvent;
-import nui.squirt.listener.ActionListener;
-import nui.squirt.listener.ValueListener;
-import nui.squirt.render.processing.ProcessingRenderingEngine;
+import nui.squirt.demo.DemoSquirtApplication.ValueLabel;
 import processing.core.PApplet;
 
 
@@ -55,7 +50,7 @@ public class NUIPAppletDemo extends PApplet {
 		ellipseMode(CENTER);
 		imageMode(CENTER);
 		
-		controller = new NUIController(new ProcessingRenderingEngine(this));
+//		controller = new NUIController();
 		
 //		img = new Image(width/2, height/2, "squirtUI.png", width/2, height/2);
 //		img.setScale((float) 0.5);
@@ -130,38 +125,38 @@ public class NUIPAppletDemo extends PApplet {
 //		s.setValue(s.getValue()+20*diff);
 //		sLabel.setText(Float.toString(s.getValue()));
 		
-		controller.render();
+//		controller.render();
 	}
 
 	public static void main(String[] args) {
 		PApplet.main(new String[]{ "--present", "nui.squirt.demo.NUIPAppletDemo" });
 	}
 
-	public class ValueLabel extends Label implements ValueListener {
-		
-	
-		public ValueLabel(String t) {
-			super(t);
-		}
-	
-		public void valueChanged(ValueEvent e) {
-			super.setText(Float.toString(e.getNewValue()));
-		}
-		
-		@Override
-		public void setText(String t) {
-			// Empty. We don't want anything external to change the text of this Label.
-		}
-	
-	}
-
-	public class ButtonLabelChanger implements ActionListener {
-		
-		int pressCount = 0;
-	
-		public void actionPerformed(ActionEvent e) {
-			Button butt = (Button) e.getSource();
-			butt.setText("Pressed " + ++pressCount + " times");
-		}
-	}
+//	public class ValueLabel extends Label implements ValueListener {
+//		
+//	
+//		public ValueLabel(String t) {
+//			super(t);
+//		}
+//	
+//		public void valueChanged(ValueEvent e) {
+//			super.setText(Float.toString(e.getNewValue()));
+//		}
+//		
+//		@Override
+//		public void setText(String t) {
+//			// Empty. We don't want anything external to change the text of this Label.
+//		}
+//	
+//	}
+//
+//	public class ButtonLabelChanger implements ActionListener {
+//		
+//		int pressCount = 0;
+//	
+//		public void actionPerformed(ActionEvent e) {
+//			Button butt = (Button) e.getSource();
+//			butt.setText("Pressed " + ++pressCount + " times");
+//		}
+//	}
 }

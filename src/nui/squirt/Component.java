@@ -1,17 +1,22 @@
 package nui.squirt;
 
-import java.awt.Dimension;
-import java.util.Collection;
+import processing.core.PApplet;
 
 public interface Component {
+	
+	public void update();
+	
+	public void preRender(PApplet p);
+	public void render(PApplet p);
+	public void postRender(PApplet p);
 	
 //	public void setRenderer(Renderer r);
 //	public Renderer getRenderer();
 	
-//	public void setX(float x);
-//	public float getX();
-//	public void setY(float y);
-//	public float getY();
+	public void setX(float x);
+	public float getX();
+	public void setY(float y);
+	public float getY();
 	
 //	public void setRotation(float theta);
 //	public float getRotation();
@@ -21,19 +26,19 @@ public interface Component {
 	
 //	public void render();
 	
-	public void setMaximumSize(Dimension d);
-	public Dimension getMaximumSize();
-	
-	public void setMinimumSize(Dimension d);
-	public Dimension getMinimumSize();
-	
-	public void setPreferredSize(Dimension d);
-	public Dimension getPreferredSize();
-	
-	public boolean hasLayout();
-	public LayoutManager getLayout();
-	
-	public void addContext(Context c);
-	public Collection<Context> getContexts();
+//	public void setMaximumSize(Dimension d);
+//	public Dimension getMaximumSize();
+//	
+//	public void setMinimumSize(Dimension d);
+//	public Dimension getMinimumSize();
+//	
+//	public void setPreferredSize(Dimension d);
+//	public Dimension getPreferredSize();
+//	
+//	public boolean hasLayout();
+//	public LayoutManager getLayout();
+//	
+//	public void addContext(Context c);
+//	public Collection<Context> getContexts();
 	
 }

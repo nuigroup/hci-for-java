@@ -13,6 +13,10 @@ public abstract class AbstractActionable extends AbstractComponent implements Ac
 	
 	private String action;
 
+	public AbstractActionable(float x, float y) {
+		super(x, y);
+	}
+
 	public void addActionListener(ActionListener a) {
 		this.actionListeners.add(a);
 	}

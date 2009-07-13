@@ -1,15 +1,19 @@
 package nui.squirt.component;
 
-import nui.squirt.Context;
-import nui.squirt.LayoutManager;
+import java.awt.Color;
+
+import processing.core.PApplet;
 
 
-public class Label extends AbstractComponent {
+public class Label extends Rectangle {
 
 	protected String text;
 
-	public Label(String text) {
+	public Label(float x, float y, String text) {
+		super(x, y, 0, 0);
 		this.text = text;
+		setFillColor(Color.BLACK);
+		setStrokeColor(Color.BLACK);
 	}
 
 	public String getText() {
@@ -17,16 +21,22 @@ public class Label extends AbstractComponent {
 	}
 
 	public void setText(String t) {
-		if (!this.text.equals(t)) {
-			this.text = t;
-			for (Context c: getContexts()) {
-				c.invalidate();
-			}
-		}
+		this.text = t;
 	}
 
-	public LayoutManager getLayout() {
-		return null;
+	public void update() {}
+	
+	@Override
+	public void preRender(PApplet p) {
+		super.preRender(p);
+		p.textAlign(PApplet.CENTER, PApplet.CENTER);
+		
+		setWidth(p.textWidth(getText()));
+		setHeight(p.textAscent()+p.textDescent());
+	}
+
+	public void render(PApplet p) {
+		p.text(getText(), 0, 0);
 	}
 
 }

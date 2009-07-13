@@ -15,6 +15,10 @@ public abstract class AbstractValuable extends AbstractComponent implements Valu
 	private float maxValue = 1;
 	private float value = (float) 0.5;
 
+	public AbstractValuable(float x, float y) {
+		super(x, y);
+	}
+
 	public void addValueListener(ValueListener l) {
 		this.valueListeners.add(l);
 	}

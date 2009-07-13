@@ -1,38 +1,32 @@
 package nui.squirt.component;
 
-import nui.squirt.LayoutManager;
+import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+
+import nui.squirt.Scalable;
 
 
-public class Image extends AbstractScalable {
+public class Image extends Rectangle implements Scalable {
 	
+	private static final Color NONE = new Color(0, 0, 0, 0);
+	
+	private static Map<String, PImage> images = new HashMap<String, PImage>();
+
 	private String imagePath;
-//	private float width;
-//	private float height;
+	private float scale = 1;
 
-//	public Image(float x, float y, String path) {
-//		super(x, y);
-//		this.imagePath = path;
-//	}
+	public Image(float x, float y, String path) {
+		this(x, y, -1, -1, path);
+	}
 	
-//	public Image(float x, float y, String path, float width, float height) {
-//		this(x, y, path);
-//		this.width = width;
-//		this.height = height;
-//	}
-
-//	private ImageRenderer renderer;
-
-//	public Renderer getRenderer() {
-//		return renderer;
-//	}
-//	
-//	public void setRenderer(Renderer r) {
-//		setRenderer((ImageRenderer) r);
-//	}
-//
-//	public void setRenderer(ImageRenderer r) {
-//		this.renderer = r;
-//	}
+	public Image(float x, float y,  float width, float height, String path) {
+		super(x, y, width, height);
+		this.imagePath = path;
+	}
 
 	public String getImagePath() {
 		return imagePath;
@@ -42,25 +36,42 @@ public class Image extends AbstractScalable {
 		this.imagePath = imagePath;
 	}
 
-	public LayoutManager getLayout() {
-		// TODO Auto-generated method stub
-		return null;
+	public float getScale() {
+		return scale;
 	}
 
-//	public float getWidth() {
-//		return width;
-//	}
-//
-//	public void setWidth(float width) {
-//		this.width = width;
-//	}
-//
-//	public float getHeight() {
-//		return height;
-//	}
-//
-//	public void setHeight(float height) {
-//		this.height = height;
-//	}
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	
+	@Override
+	public void update() {
+		setFillColor(NONE);
+		setStrokeColor(NONE);
+	}
+	
+	@Override
+	public void preRender(PApplet p) {
+		super.preRender(p);
+		
+		p.scale(getScale());
+		
+		p.imageMode(PApplet.CENTER);
+		p.noTint();
+	}
+	
+	@Override
+	public void render(PApplet p) {		
+		PImage i = images.get(getImagePath());
+		if (i == null) {
+			images.put(getImagePath(), p.loadImage(getImagePath()));
+			i = images.get(getImagePath());
+		}
+		
+		if (getWidth() >= 0 && getHeight() >= 0) {
+			p.image(i, 0, 0, getWidth(), getHeight());
+		}
+		else p.image(i, 0, 0);
+	}
 
 }

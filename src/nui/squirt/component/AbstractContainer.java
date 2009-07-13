@@ -5,36 +5,28 @@ import java.util.Collection;
 
 import nui.squirt.Component;
 import nui.squirt.Container;
-import nui.squirt.LayoutManager;
 
 public abstract class AbstractContainer extends AbstractComponent implements Container {
 
-	protected Collection<Component> children = new ArrayList<Component>();
-	private LayoutManager layout;
+	private Collection<Component> components = new ArrayList<Component>();
 	
-	public AbstractContainer(LayoutManager l) {
-		this.layout = l;
+	public AbstractContainer(float x, float y) {
+		super(x, y);
 	}
 
-	public void addChild(Component c) {
-		children.add(c);
-		getLayout().addComponent(c);
+	public void add(Component c) {
+		components.add(c);
 	}
 	
-	public void addChild(Component c, Object constraints) {
-		children.add(c);
-		getLayout().addComponent(c, constraints);
+	public void add(Component c, Object constraints) {
+		components.add(c);
 	}
 	
-	public void removeChild(Component c) {
-		children.remove(c);
+	public void remove(Component c) {
+		components.remove(c);
 	}
 
-	public Collection<Component> getChildren() {
-		return children;
-	}
-	
-	public LayoutManager getLayout() {
-		return layout;
+	public Collection<Component> getComponents() {
+		return components;
 	}
 }

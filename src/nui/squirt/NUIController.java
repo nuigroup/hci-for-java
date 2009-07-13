@@ -1,38 +1,65 @@
 package nui.squirt;
 
 import nui.squirt.component.AbstractContainer;
-import nui.squirt.layout.AbsoluteLayout;
-import nui.squirt.render.RenderingEngine;
+import processing.core.PApplet;
 
+@SuppressWarnings("serial")
 public class NUIController extends AbstractContainer {
 	
-	private RenderingEngine renderingEngine;
-
-	public NUIController(RenderingEngine r) {
-		this(r, new AbsoluteLayout());
-	}
-
-	public NUIController(RenderingEngine r, LayoutManager l) {
-		super(l);
-		this.renderingEngine = r;
+	private static NUIController n;
+	
+	public NUIController() {
+		this(0, 0);
 	}
 	
-//	public void addComponent(Component c) {
-//		RectangularRegionContext r = new RectangularRegionContext(c);
-//		r.setX((float) (Math.random()*300 - 150));
-//		r.setY((float) (Math.random()*300 - 150));
-//		r.setWidth(c.getPreferredSize().width);
-//		r.setHeight(c.getPreferredSize().height);
-//		r.setRotation((float) (Math.random()*Math.PI*2));
-//		r.setScale(1);
-//		
-//		c.addContext(r);
-//		components.put(c, r);
-//	}
+	public NUIController(float x, float y) {
+		super(x, y);
+	}
 
-	public void render() {
-		for (Context c: getLayout().getManagedContexts()) {
-			renderingEngine.render(c.getComponent(), c);
+	public static class SquirtPApplet extends PApplet {
+		@Override
+		public void setup() {
+			size(screen.width, screen.height);
+			smooth();
+			
+			textFont(createFont("Helvetica", 32));
+		}
+		
+		@Override
+		public void draw() {
+			getInstance().preRender(this);
+			getInstance().render(this);
+			getInstance().postRender(this);
+		}
+	}
+	
+	public static NUIController getInstance() {
+		if (n == null)
+			n = new NUIController();
+		return n;
+	}
+	
+	public void start() {
+		PApplet.main(new String[]{ "--present", "nui.squirt.NUIController$SquirtPApplet" });
+	}
+
+	public void update() {}
+
+	public void preRender(PApplet p) {
+		update();
+		
+		p.translate(p.width/2, p.height/2);
+		
+		p.background(255);
+	}
+
+	public void postRender(PApplet p) {}
+
+	public void render(PApplet p) {
+		for (Component c: getComponents()) {
+			c.preRender(p);
+			c.render(p);
+			c.postRender(p);
 		}
 	}
 

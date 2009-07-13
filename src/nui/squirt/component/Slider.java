@@ -1,46 +1,52 @@
 package nui.squirt.component;
 
-import nui.squirt.LayoutManager;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import processing.core.PApplet;
+
+import nui.squirt.Valuable;
+import nui.squirt.event.ValueEvent;
+import nui.squirt.listener.ValueListener;
 
 
-public class Slider extends AbstractValuable {
-
-//	private SliderRenderer renderer;
+public class Slider extends Rectangle implements Valuable {
+	
+	private Collection<ValueListener> listeners = new ArrayList<ValueListener>();
 	
 	private float length;
 	
-	private float thumbWidth = 30;
-	private float thumbHeight = 60;
+	private float minValue;
+	private float maxValue;
+	private float value;
 
-//	public Slider(float x, float y, float l) {
-//		super(x, y);
-//		this.length = l;
-//	}
-//	
-//	public Slider(float x, float y, float l, float minValue, float maxValue) {
-//		this(x, y, l);
-//		this.minValue = minValue;
-//		this.maxValue = maxValue;
-//		this.value = getCenterValue();
-//	}
-//	
-//	public Slider(float x, float y, float l, float minValue, float maxValue, float initValue) {
-//		this(x, y, l, minValue, maxValue);
-//		this.value = initValue;
-//	}
+	public Slider(float x, float y, float l) {
+		super(x, y, 30, 50);
+		this.length = l;
+	}
+	
+	public Slider(float x, float y, float l, float minValue, float maxValue) {
+		this(x, y, l);
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+		this.value = getCenterValue();
+	}
+	
+	public Slider(float x, float y, float l, float minValue, float maxValue, float initValue) {
+		this(x, y, l, minValue, maxValue);
+		this.value = initValue;
+	}
 
-//	public Renderer getRenderer() {
-//		return renderer;
-//	}
-//
-//	public void setRenderer(Renderer r) {
-//		setRenderer((SliderRenderer) r);
-//	}
-//	
-//	public void setRenderer(SliderRenderer r) {
-//		this.renderer = r;
-//	}
+	public void addValueListener(ValueListener l) {
+		listeners.add(l);
+	}
 
+	public void fireValueChanged(ValueEvent e) {
+		for (ValueListener l: listeners) {
+			l.valueChanged(e);
+		}
+	}
+	
 	public float getLength() {
 		return length;
 	}
@@ -49,25 +55,84 @@ public class Slider extends AbstractValuable {
 		this.length = length;
 	}
 
-	public float getThumbWidth() {
-		return thumbWidth;
+	public float getMinValue() {
+		return minValue;
 	}
 
-	public void setThumbWidth(float thumbWidth) {
-		this.thumbWidth = thumbWidth;
+	public void setMinValue(float minValue) {
+		this.minValue = minValue;
 	}
 
-	public float getThumbHeight() {
-		return thumbHeight;
+	public float getMaxValue() {
+		return maxValue;
 	}
 
-	public void setThumbHeight(float thumbHeight) {
-		this.thumbHeight = thumbHeight;
+	public void setMaxValue(float maxValue) {
+		this.maxValue = maxValue;
 	}
 
-	public LayoutManager getLayout() {
+	public float getValue() {
+		return value;
+	}
+
+	public void setValue(float value) {
+		ValueEvent e = new ValueEvent(this);
+		e.setOldValue(getValue());
+		
+		float v = value;
+		if (value > getMaxValue())
+			v = getMaxValue();
+		else if (value < getMinValue())
+			v = getMinValue();
+		this.value = v;
+		
+		e.setNewValue(getValue());
+		fireValueChanged(e);
+	}
+
+	public float getCenterValue() {
+		return getValueRange()/2 + getMinValue();
+	}
+
+	public float getValueRange() {
+		return getMaxValue() - getMinValue();
+	}
+	
+	@Override
+	public void update() {
 		// TODO Auto-generated method stub
-		return null;
+		super.update();
 	}
+	
+	@Override
+	public void preRender(PApplet p) {
+		// TODO Auto-generated method stub
+		super.preRender(p);
+	}
+	
+	@Override
+	public void render(PApplet p) {
+		// TODO Auto-generated method stub
+		super.render(p);
+	}
+	
+	// Old code for rendering
+//	public void draw(Slider s) {
+//	ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
+//	PApplet pApplet = engine.getPApplet();
+//	
+//	pApplet.stroke(25);
+//	pApplet.fill(75);
+//	pApplet.rectMode(PApplet.CENTER);
+//	
+//	pApplet.rect(0, 0, 5, s.getLength());
+//	
+//	float h = -(s.getValue()-s.getCenterValue()) / s.getValueRange() * s.getLength();
+//	
+//	pApplet.stroke(25);
+//	pApplet.rect(0, h, s.getThumbWidth(), s.getThumbHeight());
+//	pApplet.stroke(100);
+//	pApplet.line(-s.getThumbWidth()/2, h, s.getThumbWidth()/2, h);
+//}
 
 }
