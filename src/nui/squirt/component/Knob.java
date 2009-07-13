@@ -9,6 +9,7 @@ import processing.core.PApplet;
 import nui.squirt.Valuable;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ValueListener;
+import nui.squirt.util.AffineTransformStack;
 
 
 public class Knob extends Circle implements Valuable {
@@ -145,8 +146,8 @@ public class Knob extends Circle implements Valuable {
 	}
 	
 	@Override
-	public void update() {
-		super.update();
+	public void update(AffineTransformStack s) {
+		super.update(s);
 		
 		setFillColor(KNOB_COLOR);
 		setStrokeColor(KNOB_BORDER_COLOR);
@@ -154,16 +155,15 @@ public class Knob extends Circle implements Valuable {
 	}
 	
 	@Override
-	public void preRender(PApplet p) {
-		super.preRender(p);
+	public void preRender(PApplet p, AffineTransformStack s) {
+		super.preRender(p, s);
 		
 		p.rotate(getRotation());
 	}
 	
 	@Override
-	public void render(PApplet p) {
-		// TODO Auto-generated method stub
-		super.render(p);
+	public void render(PApplet p, AffineTransformStack s) {
+		super.render(p, s);
 		
 		// Draw indicator
 		p.fill(INDICATOR_COLOR.getRGB());

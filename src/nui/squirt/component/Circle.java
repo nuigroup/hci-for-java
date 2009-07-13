@@ -2,6 +2,9 @@ package nui.squirt.component;
 
 import java.awt.Color;
 
+import nui.squirt.ControlPoint;
+import nui.squirt.util.AffineTransformStack;
+
 import processing.core.PApplet;
 
 public class Circle extends AbstractComponent {
@@ -49,10 +52,10 @@ public class Circle extends AbstractComponent {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public void update() {}
+	public void update(AffineTransformStack s) {}
 
-	public void preRender(PApplet p) {
-		update();
+	public void preRender(PApplet p, AffineTransformStack s) {
+		update(s);
 		
 		p.ellipseMode(PApplet.CENTER);
 		p.fill(getFillColor().getRGB());
@@ -64,12 +67,22 @@ public class Circle extends AbstractComponent {
 		p.translate(getX(), getY());
 	}
 
-	public void postRender(PApplet p) {
+	public void postRender(PApplet p, AffineTransformStack s) {
 		p.popMatrix();
 	}
 
-	public void render(PApplet p) {
+	public void render(PApplet p, AffineTransformStack s) {
 		p.ellipse(0, 0, getRadius()*2, getRadius()*2);
+	}
+
+	public boolean canAcceptMoreControlPoints() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean offer(ControlPoint cp, AffineTransformStack s) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

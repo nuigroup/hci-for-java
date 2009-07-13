@@ -8,6 +8,7 @@ import processing.core.PApplet;
 import nui.squirt.Valuable;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ValueListener;
+import nui.squirt.util.AffineTransformStack;
 
 
 public class Slider extends Rectangle implements Valuable {
@@ -99,21 +100,21 @@ public class Slider extends Rectangle implements Valuable {
 	}
 	
 	@Override
-	public void update() {
+	public void update(AffineTransformStack s) {
 		// TODO Auto-generated method stub
-		super.update();
+		super.update(s);
 	}
 	
 	@Override
-	public void preRender(PApplet p) {
+	public void preRender(PApplet p, AffineTransformStack s) {
 		// TODO Auto-generated method stub
-		super.preRender(p);
+		super.preRender(p, s);
 	}
 	
 	@Override
-	public void render(PApplet p) {
+	public void render(PApplet p, AffineTransformStack s) {
 		// TODO Auto-generated method stub
-		super.render(p);
+		super.render(p, s);
 	}
 	
 	// Old code for rendering

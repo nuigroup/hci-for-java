@@ -1,44 +1,24 @@
 package nui.squirt;
 
+import nui.squirt.util.AffineTransformStack;
 import processing.core.PApplet;
 
 public interface Component {
 	
-	public void update();
+	public void update(AffineTransformStack s);
 	
-	public void preRender(PApplet p);
-	public void render(PApplet p);
-	public void postRender(PApplet p);
-	
-//	public void setRenderer(Renderer r);
-//	public Renderer getRenderer();
+	public void preRender(PApplet p, AffineTransformStack s);
+	public void render(PApplet p, AffineTransformStack s);
+	public void postRender(PApplet p, AffineTransformStack s);
 	
 	public void setX(float x);
 	public float getX();
 	public void setY(float y);
 	public float getY();
 	
-//	public void setRotation(float theta);
-//	public float getRotation();
+	// Indicates whether this Component can accept offers of additional control points
+	public boolean canAcceptMoreControlPoints();
 	
-//	public void setVisible(boolean v);
-//	public boolean isVisible();
-	
-//	public void render();
-	
-//	public void setMaximumSize(Dimension d);
-//	public Dimension getMaximumSize();
-//	
-//	public void setMinimumSize(Dimension d);
-//	public Dimension getMinimumSize();
-//	
-//	public void setPreferredSize(Dimension d);
-//	public Dimension getPreferredSize();
-//	
-//	public boolean hasLayout();
-//	public LayoutManager getLayout();
-//	
-//	public void addContext(Context c);
-//	public Collection<Context> getContexts();
-	
+	// Returns true if no other Components should process this point
+	public boolean offer(ControlPoint cp, AffineTransformStack s);
 }

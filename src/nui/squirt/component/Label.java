@@ -2,6 +2,7 @@ package nui.squirt.component;
 
 import java.awt.Color;
 
+import nui.squirt.util.AffineTransformStack;
 import processing.core.PApplet;
 
 
@@ -24,18 +25,20 @@ public class Label extends Rectangle {
 		this.text = t;
 	}
 
-	public void update() {}
+	public void update(AffineTransformStack s) {
+		super.update(s);
+	}
 	
 	@Override
-	public void preRender(PApplet p) {
-		super.preRender(p);
+	public void preRender(PApplet p, AffineTransformStack s) {
+		super.preRender(p, s);
 		p.textAlign(PApplet.CENTER, PApplet.CENTER);
 		
 		setWidth(p.textWidth(getText()));
 		setHeight(p.textAscent()+p.textDescent());
 	}
 
-	public void render(PApplet p) {
+	public void render(PApplet p, AffineTransformStack s) {
 		p.text(getText(), 0, 0);
 	}
 

@@ -8,6 +8,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 import nui.squirt.Scalable;
+import nui.squirt.util.AffineTransformStack;
 
 
 public class Image extends Rectangle implements Scalable {
@@ -45,14 +46,16 @@ public class Image extends Rectangle implements Scalable {
 	}
 	
 	@Override
-	public void update() {
+	public void update(AffineTransformStack s) {
+		super.update(s);
+		
 		setFillColor(NONE);
 		setStrokeColor(NONE);
 	}
 	
 	@Override
-	public void preRender(PApplet p) {
-		super.preRender(p);
+	public void preRender(PApplet p, AffineTransformStack s) {
+		super.preRender(p, s);
 		
 		p.scale(getScale());
 		
@@ -61,7 +64,7 @@ public class Image extends Rectangle implements Scalable {
 	}
 	
 	@Override
-	public void render(PApplet p) {		
+	public void render(PApplet p, AffineTransformStack s) {		
 		PImage i = images.get(getImagePath());
 		if (i == null) {
 			images.put(getImagePath(), p.loadImage(getImagePath()));

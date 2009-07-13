@@ -10,5 +10,7 @@
 	<classpathentry kind="lib" path="lib/motej-library-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/libTUIO.jar" sourcepath="/Users/orirawlings/Desktop/TUIO_JAVA/src"/>
+	<classpathentry kind="lib" path="lib/TuioDemo.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
