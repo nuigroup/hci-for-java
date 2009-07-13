@@ -11,7 +11,6 @@
     <property name="source" value="1.5"/>
     <path id="squirt.classpath">
         <pathelement location="bin"/>
-        <pathelement location="lib/core.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -47,7 +46,7 @@
         <antcall target="build"/>
     </target>
     <target name="Demo">
-        <java classname="nui.squirt.demo.ExperimentDemo" failonerror="true" fork="yes">
+        <java classname="nui.squirt.demo.DemoSquirtApplication" failonerror="true" fork="yes">
             <classpath refid="squirt.classpath"/>
         </java>
     </target>
