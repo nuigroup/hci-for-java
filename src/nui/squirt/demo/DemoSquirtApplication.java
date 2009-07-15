@@ -100,10 +100,13 @@ public class DemoSquirtApplication {
 //		n.add(i);
 		
 		Rectangle r = new Rectangle(0, 0, 300, 600);
-//		Rectangle r = new Rectangle(0, 0, 100, 150);
+		Rectangle r0 = new Rectangle(0, 0, 100, 150);
+		r0.setFillColor(new Color(128, 64, 32, 128));
+		r0.setRotation((float) (Math.PI/4));
 //		Rectangle r1 = new SpinningRectangle(-15, -100, 50, 60);
 //		r1.setFillColor(new Color(255, 0, 0, 150));
 		n.add(r);
+		n.add(r0);
 //		n.add(r1);
 		
 //		Circle c = new Circle(150, -60, 150);
