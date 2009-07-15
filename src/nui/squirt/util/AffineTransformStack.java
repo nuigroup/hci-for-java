@@ -54,7 +54,6 @@ public class AffineTransformStack {
 		return stack.peek();
 	}
 	
-	// TODO add transform and inverse transform methods directly to this stack
 	public Point2D transform(float origX, float origY) {
 		Point2D orig = new Point2D.Float(origX, origY);
 		return stack.peek().transform(orig, null);

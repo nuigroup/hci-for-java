@@ -2,6 +2,7 @@ package nui.squirt;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Queue;
@@ -134,16 +135,10 @@ public class NUIController extends AbstractContainer implements TuioListener {
 
 			
 			try {
-				double[] origXY = { tcp.getX(), tcp.getY() };
-//System.out.println("transform " + s.peek().getTranslateX() + "," + s.peek().getTranslateY());
-//System.out.println("origXY " + origXY[0] + "," + origXY[1]);
-				double[] newXY = new double[2];
-				s.peek().inverseTransform(origXY, 0, newXY, 0, 1);
-//System.out.println("newXY " + newXY[0] + "," + newXY[1]);
-				
-				p.ellipse((float) newXY[0], (float) newXY[1], 30, 30);
+				Point2D xy = s.inverseTransform(tcp.getX(), tcp.getY());
+				p.ellipse((float) xy.getX(), (float) xy.getY(), 30, 30);
 				p.fill(0);
-				p.text(tc.getCursorID(), (float) newXY[0], (float) newXY[1]);
+				p.text(tc.getCursorID(), (float) xy.getX(), (float) xy.getY());
 			} catch (NoninvertibleTransformException e) {
 				e.printStackTrace();
 			}

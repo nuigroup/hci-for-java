@@ -143,23 +143,19 @@ public class Rectangle extends AbstractComponent implements Component {
 		s.translate(getX(), getY());
 		s.rotate(getRotation());
 		
-		double[] origXY = { cp.getX(), cp.getY() };
-		double[] newXY = new double[2];
 		try {
-			s.peek().inverseTransform(origXY, 0, newXY, 0, 1);
+			Point2D xy = s.inverseTransform(cp.getX(), cp.getY());
+			
+			if (xy.getX() > -getWidth()/2 && xy.getX() < getWidth()/2 && xy.getX() > -getHeight()/2 && xy.getX() < getHeight()/2) {
+				controlPoints[controlPointCount++] = cp;
+				s.popTransform();
+				return true;
+			}
 		} catch (NoninvertibleTransformException e) {
 			e.printStackTrace();
 		}
-		
-		if (newXY[0] > -getWidth()/2 && newXY[0] < getWidth()/2 && newXY[1] > -getHeight()/2 && newXY[1] < getHeight()/2) {
-			controlPoints[controlPointCount++] = cp;
-			s.popTransform();
-			return true;
-		}
-		else {
-			s.popTransform();
-			return false;
-		}
+		s.popTransform();
+		return false;
 	}
 
 }
