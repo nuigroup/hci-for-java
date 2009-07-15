@@ -9,9 +9,11 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import nui.squirt.component.AbstractContainer;
+import nui.squirt.controlpoint.MouseControlPoint;
 import nui.squirt.controlpoint.TUIOControlPoint;
 import nui.squirt.util.AffineTransformStack;
 import processing.core.PApplet;
+import processing.core.PVector;
 import TUIO.TuioClient;
 import TUIO.TuioCursor;
 import TUIO.TuioListener;
@@ -29,6 +31,8 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	
 	private float screenWidth;
 	private float screenHeight;
+
+	private MouseControlPoint mouseControlPoint;
 	
 	public NUIController() {
 		this(0, 0);
@@ -55,6 +59,21 @@ public class NUIController extends AbstractContainer implements TuioListener {
 			getInstance().preRender(this, s);
 			getInstance().render(this, s);
 			getInstance().postRender(this, s);
+		}
+		
+		@Override
+		public void mousePressed() {
+			getInstance().addMouseControlPoint(new PVector(mouseX, mouseY));
+		}
+		
+		@Override
+		public void mouseReleased() {
+			getInstance().removeMouseControlPoint();
+		}
+		
+		@Override
+		public void mouseDragged() {
+			getInstance().updateMouseControlPoint(new PVector(mouseX, mouseY));
 		}
 	}
 	
@@ -208,6 +227,25 @@ System.out.println("Updating " + c + " at " + newXY[0] + "," + newXY[1]);
 	public void refresh(TuioTime t) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void addMouseControlPoint(PVector initialPoint) {
+		MouseControlPoint mcp = new MouseControlPoint(initialPoint);
+		newControlPointsQueue.offer(mcp);
+		mouseControlPoint = mcp;
+	}
+	
+	public void removeMouseControlPoint() {
+		if (mouseControlPoint != null) {
+			mouseControlPoint.kill();
+		}
+	}
+	
+	public void updateMouseControlPoint(PVector newPoint) {
+		if (mouseControlPoint != null) {
+			mouseControlPoint.addToPath(newPoint);
+			mouseControlPoint.setChanged(true);
+		}
 	}
 
 }

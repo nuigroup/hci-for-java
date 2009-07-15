@@ -52,7 +52,9 @@ public class Circle extends AbstractComponent {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public void update(AffineTransformStack s) {}
+	public void update(AffineTransformStack s) {
+		// TODO add handling of ControlPoint inputs
+	}
 
 	public void preRender(PApplet p, AffineTransformStack s) {
 		update(s);

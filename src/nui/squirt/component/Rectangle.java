@@ -1,13 +1,13 @@
 package nui.squirt.component;
 
 import java.awt.Color;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 
-import processing.core.PApplet;
 import nui.squirt.Component;
 import nui.squirt.ControlPoint;
 import nui.squirt.util.AffineTransformStack;
+import processing.core.PApplet;
 
 public class Rectangle extends AbstractComponent implements Component {
 	
@@ -79,10 +79,7 @@ public class Rectangle extends AbstractComponent implements Component {
 	public void update(AffineTransformStack s) {
 		s.pushTransform();
 		s.translate(getX(), getY());
-		s.rotate(getRotation());
-		
-		AffineTransform inverse = null;
-		
+		s.rotate(getRotation());		
 		
 		for (int i = 0; i < controlPointCount; i++) {
 			if (controlPoints[i].isDead()) {
@@ -91,23 +88,20 @@ public class Rectangle extends AbstractComponent implements Component {
 				i--;
 			}
 		}
-		if (controlPointCount > 0) {
-			try {
-				inverse = s.peek().createInverse();
-			} catch (NoninvertibleTransformException e) {
-				e.printStackTrace();
-			}
-		}
 		switch(controlPointCount) {
 			case 1:
-				if (controlPoints[0].isChanged() && inverse != null) {
-					double[] xy = { controlPoints[0].getX(), controlPoints[0].getY(), controlPoints[0].getPreviousX(), controlPoints[0].getPreviousY() };
-					inverse.transform(xy, 0, xy, 0, 2);
-					float diffX = (float) (xy[0] - xy[2]);
-					float diffY = (float) (xy[1] - xy[3]);
-					setX(getX() + diffX);
-					setY(getY() + diffY);
-					controlPoints[0].setChanged(false);
+				if (controlPoints[0].isChanged()) {
+					try {
+						Point2D current = s.inverseTransform(controlPoints[0].getX(), controlPoints[0].getY());
+						Point2D last = s.inverseTransform(controlPoints[0].getPreviousX(), controlPoints[0].getPreviousY());
+						float diffX = (float) (current.getX() - last.getX());
+						float diffY = (float) (current.getY() - last.getY());
+						setX(getX() + diffX);
+						setY(getY() + diffY);
+						controlPoints[0].setChanged(false);
+					} catch (NoninvertibleTransformException e) {
+						e.printStackTrace();
+					}
 				}
 				break;
 			case 2:
@@ -157,7 +151,7 @@ public class Rectangle extends AbstractComponent implements Component {
 			e.printStackTrace();
 		}
 		
-		if (newXY[0] > getX()-getWidth()/2 && newXY[0] < getX()+getWidth()/2 && newXY[1] > getY()-getHeight()/2 && newXY[1] < getY()+getHeight()/2) {
+		if (newXY[0] > -getWidth()/2 && newXY[0] < getWidth()/2 && newXY[1] > -getHeight()/2 && newXY[1] < getHeight()/2) {
 			controlPoints[controlPointCount++] = cp;
 			s.popTransform();
 			return true;

@@ -1,6 +1,8 @@
 package nui.squirt.util;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.util.Stack;
 
 public class AffineTransformStack {
@@ -50,6 +52,17 @@ public class AffineTransformStack {
 	
 	public AffineTransform peek() {
 		return stack.peek();
+	}
+	
+	// TODO add transform and inverse transform methods directly to this stack
+	public Point2D transform(float origX, float origY) {
+		Point2D orig = new Point2D.Float(origX, origY);
+		return stack.peek().transform(orig, null);
+	}
+	
+	public Point2D inverseTransform(float origX, float origY) throws NoninvertibleTransformException {
+		Point2D orig = new Point2D.Float(origX, origY);
+		return stack.peek().inverseTransform(orig, null);
 	}
 
 }
