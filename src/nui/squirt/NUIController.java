@@ -4,7 +4,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Queue;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -97,8 +97,8 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	
 		ControlPoint cp = newControlPointsQueue.poll();
 		while (cp != null && !cp.isDead()) {
-			Iterator<Component> i = getComponents().iterator();
-			while (i.hasNext() && !i.next().offer(cp, s));
+			ListIterator<Component> i = getComponents().listIterator(getComponents().size());
+			while (i.hasPrevious() && !i.previous().offer(cp, s));
 			cp = newControlPointsQueue.poll();
 		}
 	}

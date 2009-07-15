@@ -1,6 +1,6 @@
 package nui.squirt.component;
 
-import java.util.Collection;
+import java.util.List;
 
 import nui.squirt.Component;
 import nui.squirt.Container;
@@ -44,7 +44,7 @@ public class Frame extends Rectangle implements Container {
 		
 	}
 
-	public Collection<Component> getComponents() {
+	public List<Component> getComponents() {
 		// TODO Auto-generated method stub
 		return null;
 	}

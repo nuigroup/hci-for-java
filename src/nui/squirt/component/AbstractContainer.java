@@ -1,14 +1,14 @@
 package nui.squirt.component;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import nui.squirt.Component;
 import nui.squirt.Container;
 
 public abstract class AbstractContainer extends AbstractComponent implements Container {
 
-	private Collection<Component> components = new ArrayList<Component>();
+	private List<Component> components = new ArrayList<Component>();
 	
 	public AbstractContainer(float x, float y) {
 		super(x, y);
@@ -26,7 +26,7 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 		components.remove(c);
 	}
 
-	public Collection<Component> getComponents() {
+	public List<Component> getComponents() {
 		return components;
 	}
 }
