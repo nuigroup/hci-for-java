@@ -109,11 +109,11 @@ public class DemoSquirtApplication {
 		n.add(r0);
 //		n.add(r1);
 		
-//		Circle c = new Circle(150, -60, 150);
-//		c.setFillColor(new Color(0, 0, 255, 128));
-//		c.setStrokeColor(Color.YELLOW);
-//		c.setStrokeWeight(2);
-//		n.add(c);
+		Circle c = new Circle(150, -60, 150);
+		c.setFillColor(new Color(0, 0, 255, 128));
+		c.setStrokeColor(Color.YELLOW);
+		c.setStrokeWeight(2);
+		n.add(c);
 		
 //		Button b = new Button(-150, 170, "button");
 //		b.setRotation((float) (Math.PI / 4));

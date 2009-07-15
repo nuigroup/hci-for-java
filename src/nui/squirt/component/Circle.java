@@ -1,6 +1,8 @@
 package nui.squirt.component;
 
 import java.awt.Color;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 
 import nui.squirt.ControlPoint;
 import nui.squirt.util.AffineTransformStack;
@@ -14,6 +16,9 @@ public class Circle extends AbstractComponent {
 	private Color fillColor = Color.BLUE;
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight;
+	
+	private ControlPoint[] controlPoints = new ControlPoint[1];
+	private int controlPointCount = 0;
 
 	public Circle(float x, float y, float r) {
 		super(x, y);
@@ -53,7 +58,29 @@ public class Circle extends AbstractComponent {
 	}
 
 	public void update(AffineTransformStack s) {
-		// TODO add handling of ControlPoint inputs
+		s.pushTransform();
+		s.translate(getX(), getY());
+		
+		for (int i = 0; i < controlPointCount; i++) {
+			if (controlPoints[i].isDead()) {
+				controlPoints[i] = i+1 < controlPointCount ? controlPoints[i+1] : null;
+				controlPointCount--;
+				i--;
+			}
+		}
+		switch(controlPointCount) {
+			case 1:
+				if (controlPoints[0].isChanged()) {
+					float diffX = (float) (controlPoints[0].getX() - controlPoints[0].getPreviousX());
+					float diffY = (float) (controlPoints[0].getY() - controlPoints[0].getPreviousY());
+					setX(getX() + diffX);
+					setY(getY() + diffY);
+					controlPoints[0].setChanged(false);
+				}
+				break;
+			case 2:
+				break;
+		}
 	}
 
 	public void preRender(PApplet p, AffineTransformStack s) {
@@ -71,6 +98,7 @@ public class Circle extends AbstractComponent {
 
 	public void postRender(PApplet p, AffineTransformStack s) {
 		p.popMatrix();
+		s.popTransform();
 	}
 
 	public void render(PApplet p, AffineTransformStack s) {
@@ -78,12 +106,26 @@ public class Circle extends AbstractComponent {
 	}
 
 	public boolean canAcceptMoreControlPoints() {
-		// TODO Auto-generated method stub
-		return false;
+		return controlPointCount < controlPoints.length;
 	}
 
 	public boolean offer(ControlPoint cp, AffineTransformStack s) {
-		// TODO Auto-generated method stub
+		if (!canAcceptMoreControlPoints()) return false;
+		
+		s.pushTransform();
+		s.translate(getX(), getY());
+		
+		try {
+			Point2D xy = s.inverseTransform(cp.getX(), cp.getY());
+			if (xy.distance(0, 0) <= getRadius()) {
+				controlPoints[controlPointCount++] = cp;
+				s.popTransform();
+				return true;
+			}
+		} catch (NoninvertibleTransformException e) {
+			e.printStackTrace();
+		}
+		s.popTransform();
 		return false;
 	}
 
