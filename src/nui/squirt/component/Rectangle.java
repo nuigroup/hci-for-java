@@ -19,7 +19,7 @@ public class Rectangle extends AbstractComponent implements Component {
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight = 1;
 	
-	private ControlPoint[] controlPoints = new ControlPoint[2];
+	private ControlPoint[] controlPoints = new ControlPoint[1];
 	private int controlPointCount = 0;
 
 	public Rectangle(float x, float y, float w, float h) {
@@ -76,10 +76,10 @@ public class Rectangle extends AbstractComponent implements Component {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public void update(AffineTransformStack s) {
+	public void update(AffineTransformStack s) {		
 		s.pushTransform();
 		s.translate(getX(), getY());
-		s.rotate(getRotation());		
+		s.rotate(getRotation());
 		
 		for (int i = 0; i < controlPointCount; i++) {
 			if (controlPoints[i].isDead()) {
@@ -91,22 +91,16 @@ public class Rectangle extends AbstractComponent implements Component {
 		switch(controlPointCount) {
 			case 1:
 				if (controlPoints[0].isChanged()) {
-					try {
-						Point2D current = s.inverseTransform(controlPoints[0].getX(), controlPoints[0].getY());
-						Point2D last = s.inverseTransform(controlPoints[0].getPreviousX(), controlPoints[0].getPreviousY());
-						float diffX = (float) (current.getX() - last.getX());
-						float diffY = (float) (current.getY() - last.getY());
-						setX(getX() + diffX);
-						setY(getY() + diffY);
-						controlPoints[0].setChanged(false);
-					} catch (NoninvertibleTransformException e) {
-						e.printStackTrace();
-					}
+					float diffX = (float) (controlPoints[0].getX() - controlPoints[0].getPreviousX());
+					float diffY = (float) (controlPoints[0].getY() - controlPoints[0].getPreviousY());
+					setX(getX() + diffX);
+					setY(getY() + diffY);
+					controlPoints[0].setChanged(false);
 				}
 				break;
 			case 2:
 				break;
-		}
+		}	
 	}
 
 	public void preRender(PApplet p, AffineTransformStack s) {
@@ -145,8 +139,7 @@ public class Rectangle extends AbstractComponent implements Component {
 		
 		try {
 			Point2D xy = s.inverseTransform(cp.getX(), cp.getY());
-			
-			if (xy.getX() > -getWidth()/2 && xy.getX() < getWidth()/2 && xy.getX() > -getHeight()/2 && xy.getX() < getHeight()/2) {
+			if (xy.getX() > -getWidth()/2 && xy.getX() < getWidth()/2 && xy.getY() > -getHeight()/2 && xy.getY() < getHeight()/2) {
 				controlPoints[controlPointCount++] = cp;
 				s.popTransform();
 				return true;
