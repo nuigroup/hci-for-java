@@ -3,6 +3,9 @@ package nui.squirt.component;
 import java.awt.Color;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import nui.squirt.Component;
 import nui.squirt.ControlPoint;
@@ -19,8 +22,8 @@ public class Rectangle extends AbstractComponent implements Component {
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight = 1;
 	
-	private ControlPoint[] controlPoints = new ControlPoint[1];
-	private int controlPointCount = 0;
+	private Collection<ControlPoint> contorlPoints = new ArrayList<ControlPoint>();
+	private static final int MAX_CONTROL_POINTS = 1;
 
 	public Rectangle(float x, float y, float w, float h) {
 		super(x, y);
@@ -81,26 +84,22 @@ public class Rectangle extends AbstractComponent implements Component {
 		s.translate(getX(), getY());
 		s.rotate(getRotation());
 		
-		for (int i = 0; i < controlPointCount; i++) {
-			if (controlPoints[i].isDead()) {
-				controlPoints[i] = i+1 < controlPointCount ? controlPoints[i+1] : null;
-				controlPointCount--;
-				i--;
-			}
+		for (Iterator<ControlPoint> i = getControlPoints().iterator(); i.hasNext();) {
+			ControlPoint cp = i.next();
+			if (cp.isDead()) i.remove();
 		}
-		switch(controlPointCount) {
+		switch (getControlPoints().size()) {
 			case 1:
-				if (controlPoints[0].isChanged()) {
-					float diffX = (float) (controlPoints[0].getX() - controlPoints[0].getPreviousX());
-					float diffY = (float) (controlPoints[0].getY() - controlPoints[0].getPreviousY());
+				Iterator<ControlPoint> i = getControlPoints().iterator();
+				ControlPoint cp = i.next();
+				if (cp.isChanged()) {
+					float diffX = cp.getX() - cp.getPreviousX();
+					float diffY = cp.getY() - cp.getPreviousY();
 					setX(getX() + diffX);
 					setY(getY() + diffY);
-					controlPoints[0].setChanged(false);
+					cp.setChanged(false);
 				}
-				break;
-			case 2:
-				break;
-		}	
+		}
 	}
 
 	public void preRender(PApplet p, AffineTransformStack s) {
@@ -127,7 +126,7 @@ public class Rectangle extends AbstractComponent implements Component {
 	}
 
 	public boolean canAcceptMoreControlPoints() {
-		return controlPointCount < controlPoints.length;
+		return contorlPoints.size() <= MAX_CONTROL_POINTS;
 	}
 
 	public boolean offer(ControlPoint cp, AffineTransformStack s) {
@@ -140,7 +139,7 @@ public class Rectangle extends AbstractComponent implements Component {
 		try {
 			Point2D xy = s.inverseTransform(cp.getX(), cp.getY());
 			if (xy.getX() > -getWidth()/2 && xy.getX() < getWidth()/2 && xy.getY() > -getHeight()/2 && xy.getY() < getHeight()/2) {
-				controlPoints[controlPointCount++] = cp;
+				addControlPoint(cp);
 				s.popTransform();
 				return true;
 			}
@@ -149,6 +148,14 @@ public class Rectangle extends AbstractComponent implements Component {
 		}
 		s.popTransform();
 		return false;
+	}
+
+	protected void addControlPoint(ControlPoint cp) {
+		contorlPoints.add(cp);
+	}
+
+	protected Collection<ControlPoint> getControlPoints() {
+		return contorlPoints;
 	}
 
 }
