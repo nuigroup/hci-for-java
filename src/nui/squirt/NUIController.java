@@ -98,7 +98,14 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		ControlPoint cp = newControlPointsQueue.poll();
 		while (cp != null && !cp.isDead()) {
 			ListIterator<Component> i = getComponents().listIterator(getComponents().size());
-			while (i.hasPrevious() && !i.previous().offer(cp, s));
+			while (i.hasPrevious()) {
+				Component c = i.previous();
+				if (c.offer(cp, s)) {
+					i.remove();
+					getComponents().add(c);
+					break;
+				}
+			}
 			cp = newControlPointsQueue.poll();
 		}
 	}
