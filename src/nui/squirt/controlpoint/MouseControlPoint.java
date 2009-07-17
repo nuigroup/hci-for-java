@@ -29,12 +29,7 @@ public class MouseControlPoint extends AbstractControlPoint {
 	}
 
 	public void addToPath(PVector newPoint) {
-		if (isChanged()) {
-			// the last change still hasn't been processed, so we would lose the true previous point
-			// just overwrite the latest point
-			path.remove(path.size() - 1);
-		}
 		path.add(newPoint);
+		fireControlPointUpdatedEvent();
 	}
-
 }

@@ -1,11 +1,19 @@
 package nui.squirt.component;
 
-import nui.squirt.Component;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public abstract class AbstractComponent implements Component {
+import nui.squirt.Component;
+import nui.squirt.ControlPoint;
+import nui.squirt.listener.ControlPointListener;
+
+public abstract class AbstractComponent implements Component, ControlPointListener {
 	
 	private float x;
 	private float y;
+	
+	private Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
+	private static final int MAX_CONTROL_POINTS = 1;
 	
 	public AbstractComponent(float x, float y) {
 		this.x = x;
@@ -24,80 +32,28 @@ public abstract class AbstractComponent implements Component {
 	public void setY(float y) {
 		this.y = y;
 	}
+
+	public boolean canAcceptMoreControlPoints() {
+		return controlPoints.size() <= MAX_CONTROL_POINTS;
+	}
 	
-//	private Collection<Context> contexts = new ArrayList<Context>();
-//	
-//	private Dimension maximumSize = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
-//	private Dimension minimumSize = new Dimension(Integer.MIN_VALUE, Integer.MIN_VALUE);
-//	private Dimension preferredSize = new Dimension();
-//	
-//	public Dimension getMaximumSize() {
-//		return maximumSize;
-//	}
-//
-//	public void setMaximumSize(Dimension maximumSize) {
-//		if (!this.maximumSize.equals(maximumSize)) {
-//			this.maximumSize = maximumSize;
-//			for (Context c: getContexts()) {
-//				c.invalidate();
-//			}
-//		}
-//	}
-//
-//	public Dimension getMinimumSize() {
-//		return minimumSize;
-//	}
-//
-//	public void setMinimumSize(Dimension minimumSize) {
-//		if (!this.minimumSize.equals(minimumSize)) {
-//			this.minimumSize = minimumSize;
-//			for (Context c: getContexts()) {
-//				c.invalidate();
-//			}
-//		}
-//	}
-//
-//	public Dimension getPreferredSize() {
-//		return preferredSize;
-//	}
-//
-//	public void setPreferredSize(Dimension preferredSize) {
-//		if (!this.preferredSize.equals(preferredSize)) {
-//			this.preferredSize = preferredSize;
-//			for (Context c: getContexts()) {
-//				c.invalidate();
-//			}
-//		}
-//	}
-//	
-//	public boolean hasLayout() {
-//		return getLayout() != null;
-//	}
-//	
-//	public void addContext(Context c) {
-//		if (c.getComponent() == this) {
-//			contexts.add(c);
-//		}
-//	}
-//	
-//	public Collection<Context> getContexts() {
-//		return contexts;
-//	}
+	public void controlPointCreated(ControlPoint cp) {
+		controlPoints.add(cp);
+	}
 
-//	public boolean isVisible() {
-//		return visible;
-//	}
-//
-//	public void setVisible(boolean visible) {
-//		this.visible = visible;
-//	}
+	public void controlPointDied(ControlPoint cp) {
+		controlPoints.remove(cp);
+	}
 
-//	public void render() {
-//		if (isVisible()) {
-//			getRenderer().prepare(this);
-//			getRenderer().draw(this);
-//			getRenderer().postDraw(this);
-//		}
-//	}
+	public void controlPointUpdated(ControlPoint cp) {
+		switch (controlPoints.size()) {
+			case 1:
+				float diffX = cp.getX() - cp.getPreviousX();
+				float diffY = cp.getY() - cp.getPreviousY();
+				setX(getX() + diffX);
+				setY(getY() + diffY);
+				break;
+		}
+	}
 	
 }

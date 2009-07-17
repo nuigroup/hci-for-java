@@ -24,6 +24,8 @@ public class Button extends Rectangle implements Actionable {
 
 	private Collection<ActionListener> listeners = new ArrayList<ActionListener>();
 	
+//	private HashMap<ControlPoint, Boolean> controlPoints = new HashMap<ControlPoint, Boolean>();
+	
 	public Button(float x, float y, String text) {
 		super(x, y, 0, 0);
 		this.label = new Label(0, 0, text);
@@ -88,5 +90,15 @@ public class Button extends Rectangle implements Actionable {
 		getLabel().render(p, s);
 		getLabel().postRender(p, s);
 	}
+	
+//	@Override
+//	protected void addControlPoint(ControlPoint cp) {
+//		controlPoints.put(cp, Boolean.TRUE);
+//	}
+//	
+//	@Override
+//	protected Collection<ControlPoint> getControlPoints() {
+//		return controlPoints.keySet();
+//	}
 	
 }

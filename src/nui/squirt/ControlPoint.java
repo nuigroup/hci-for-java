@@ -1,5 +1,7 @@
 package nui.squirt;
 
+import nui.squirt.listener.ControlPointListener;
+
 
 public interface ControlPoint {
 	
@@ -11,6 +13,8 @@ public interface ControlPoint {
 	public float getPreviousX();
 	public float getPreviousY();
 	
-	public boolean isChanged();
-	public void setChanged(boolean changed);
+	public void addControlPointListener(ControlPointListener l);
+	public void fireControlPointCreatedEvent();
+	public void fireControlPointDiedEvent();
+	public void fireControlPointUpdatedEvent();
 }
