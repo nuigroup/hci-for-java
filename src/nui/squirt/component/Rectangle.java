@@ -3,6 +3,8 @@ package nui.squirt.component;
 import java.awt.Color;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import nui.squirt.ControlPoint;
 import nui.squirt.util.AffineTransformStack;
@@ -18,8 +20,8 @@ public class Rectangle extends AbstractComponent {
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight = 1;
 	
-//	private Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
-//	private static final int MAX_CONTROL_POINTS = 1;
+	private Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
+	private static final int MAX_CONTROL_POINTS = 2;
 
 	public Rectangle(float x, float y, float w, float h) {
 		super(x, y);
@@ -104,9 +106,9 @@ public class Rectangle extends AbstractComponent {
 		p.rect(0, 0, getWidth(), getHeight());
 	}
 
-//	public boolean canAcceptMoreControlPoints() {
-//		return controlPoints.size() <= MAX_CONTROL_POINTS;
-//	}
+	public boolean canAcceptMoreControlPoints() {
+		return controlPoints.size() <= MAX_CONTROL_POINTS;
+	}
 
 	public boolean offer(ControlPoint cp, AffineTransformStack s) {
 		if (!canAcceptMoreControlPoints()) return false;
@@ -128,23 +130,31 @@ public class Rectangle extends AbstractComponent {
 		return false;
 	}
 
-//	public void controlPointCreated(ControlPoint cp) {
-//		controlPoints.add(cp);
-//	}
-//
-//	public void controlPointDied(ControlPoint cp) {
-//		controlPoints.remove(cp);
-//	}
-//
-//	public void controlPointUpdated(ControlPoint cp) {
-//		switch (controlPoints.size()) {
-//			case 1:
-//				float diffX = cp.getX() - cp.getPreviousX();
-//				float diffY = cp.getY() - cp.getPreviousY();
-//				setX(getX() + diffX);
-//				setY(getY() + diffY);
-//				break;
-//		}
-//	}
+	public void controlPointCreated(ControlPoint cp) {
+		controlPoints.add(cp);
+	}
+
+	public void controlPointDied(ControlPoint cp) {
+		controlPoints.remove(cp);
+	}
+
+	public void controlPointUpdated(ControlPoint cp) {
+		switch (controlPoints.size()) {
+			case 1:
+				float diffX = cp.getX() - cp.getPreviousX();
+				float diffY = cp.getY() - cp.getPreviousY();
+				setX(getX() + diffX);
+				setY(getY() + diffY);
+				break;
+			case 2:
+				ControlPoint other;
+				for (ControlPoint p: controlPoints) {
+					if (!cp.equals(p)) {
+						other = p;
+					}
+				}
+				// TODO add matrix manipulation code
+		}
+	}
 
 }

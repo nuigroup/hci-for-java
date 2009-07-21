@@ -3,6 +3,8 @@ package nui.squirt.component;
 import java.awt.Color;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import nui.squirt.ControlPoint;
 import nui.squirt.util.AffineTransformStack;
@@ -16,6 +18,9 @@ public class Circle extends AbstractComponent {
 	private Color fillColor = Color.BLUE;
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight;
+	
+	private Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
+	private static final int MAX_CONTROL_POINTS = 1;
 
 	public Circle(float x, float y, float r) {
 		super(x, y);
@@ -98,6 +103,29 @@ public class Circle extends AbstractComponent {
 		}
 		s.popTransform();
 		return false;
+	}
+
+	public boolean canAcceptMoreControlPoints() {
+		return controlPoints.size() <= MAX_CONTROL_POINTS;
+	}
+
+	public void controlPointCreated(ControlPoint cp) {
+		controlPoints.add(cp);
+	}
+
+	public void controlPointDied(ControlPoint cp) {
+		controlPoints.remove(cp);
+	}
+
+	public void controlPointUpdated(ControlPoint cp) {
+		switch (controlPoints.size()) {
+			case 1:
+				float diffX = cp.getX() - cp.getPreviousX();
+				float diffY = cp.getY() - cp.getPreviousY();
+				setX(getX() + diffX);
+				setY(getY() + diffY);
+				break;
+		}
 	}
 
 }
