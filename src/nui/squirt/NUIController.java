@@ -1,10 +1,10 @@
 package nui.squirt;
 
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ListIterator;
-import java.util.Map.Entry;
 
 import nui.squirt.component.AbstractContainer;
 import nui.squirt.controlpoint.MouseControlPoint;
@@ -47,6 +47,7 @@ public class NUIController extends AbstractContainer implements TuioListener {
 			size(screen.width, screen.height);
 			NUIController.getInstance().screenWidth = width;
 			NUIController.getInstance().screenHeight = height;
+			NUIController.getInstance().getTransformMatrix().translate(width/2, height/2);
 			smooth();
 			
 			textFont(createFont("Helvetica", 32));
@@ -54,10 +55,9 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		
 		@Override
 		public void draw() {
-			AffineTransformStack s = new AffineTransformStack();
-			getInstance().preRender(this, s);
-			getInstance().render(this, s);
-			getInstance().postRender(this, s);
+			getInstance().preRender(this);
+			getInstance().render(this);
+			getInstance().postRender(this);
 		}
 		
 		@Override
@@ -89,50 +89,34 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		tc.connect();
 	}
 
-	public void update(AffineTransformStack s) {
-		s.pushTransform();
-		s.translate(screenWidth/2, screenHeight/2);
-	}
+	public void update() {}
 
-	public void preRender(PApplet p, AffineTransformStack s) {
-		update(s);
-		
-		p.pushMatrix();
-		p.translate(p.width/2, p.height/2);
+	public void preRender(PApplet p) {
+		super.preRender(p);
 		
 		p.background(255);
 	}
 
-	public void postRender(PApplet p, AffineTransformStack s) {
-		s.popTransform();
-		p.popMatrix();
-	}
-
-	public void render(PApplet p, AffineTransformStack s) {
-		for (Component c: getComponents()) {
-			c.preRender(p, s);
-			c.render(p, s);
-			c.postRender(p, s);
+	public void render(PApplet p) {
+		List<Component> l = new ArrayList<Component>(getComponents());
+		for (Component c: l) {
+			c.preRender(p);
+			c.render(p);
+			c.postRender(p);
 		}
 		
-		for (Entry<TuioCursor, TUIOControlPoint> tuioEntry: tuioControlPoints.entrySet()) {
-			TuioCursor tc = tuioEntry.getKey();
-			TUIOControlPoint tcp = tuioEntry.getValue();
-			
+		Collection<TUIOControlPoint> tcps = tuioControlPoints.values();
+		for (TUIOControlPoint tcp: tcps) {
 			p.ellipseMode(PApplet.CENTER);
 			p.fill(tcp.isDead() ? p.color(255, 0, 0, 150) : p.color(150, 150));
 			p.stroke(0);
 			p.strokeWeight(1);
 
 			
-			try {
-				Point2D xy = s.inverseTransform(tcp.getX(), tcp.getY());
-				p.ellipse((float) xy.getX(), (float) xy.getY(), 30, 30);
-				p.fill(0);
-				p.text(tc.getCursorID(), (float) xy.getX(), (float) xy.getY());
-			} catch (NoninvertibleTransformException e) {
-				e.printStackTrace();
-			}
+			PVector v = transformToLocalSpace(new PVector(tcp.getX(), tcp.getY()));
+			p.ellipse(v.x, v.y, 30, 30);
+			p.fill(0);
+			p.text(tcp.getCursor().getCursorID(), v.x, v.y);
 		}
 	}
 
@@ -140,11 +124,11 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		return true;
 	}
 
-	public boolean offer(ControlPoint cp, AffineTransformStack s) {
+	public boolean offer(ControlPoint cp) {
 		ListIterator<Component> i = getComponents().listIterator(getComponents().size());
 		while (i.hasPrevious()) {
 			Component c = i.previous();
-			if (c.offer(cp, s)) {
+			if (c.offer(cp)) {
 				i.remove();
 				getComponents().add(c);
 				if (c instanceof ControlPointListener) {
@@ -162,7 +146,7 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		AffineTransformStack s = new AffineTransformStack();
 		s.pushTransform();
 		s.translate(screenWidth/2, screenHeight/2);
-		offer(tcp, s);
+		offer(tcp);
 		tcp.fireControlPointCreatedEvent();
 		
 		tuioControlPoints.put(c, tcp);
@@ -199,9 +183,7 @@ public class NUIController extends AbstractContainer implements TuioListener {
 			mouseControlPoint.kill();
 		}
 		mouseControlPoint = new MouseControlPoint(initialPoint);
-		AffineTransformStack s = new AffineTransformStack();
-		s.translate(screenWidth/2, screenHeight/2);
-		offer(mouseControlPoint, s);
+		offer(mouseControlPoint);
 		mouseControlPoint.fireControlPointCreatedEvent();
 	}
 	

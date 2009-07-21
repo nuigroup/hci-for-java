@@ -1,18 +1,15 @@
 package nui.squirt.component;
 
 import java.awt.Color;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import nui.squirt.ControlPoint;
-import nui.squirt.util.AffineTransformStack;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Rectangle extends AbstractComponent {
 	
-	private float rotation;
 	private float width;
 	private float height;
 	
@@ -21,20 +18,12 @@ public class Rectangle extends AbstractComponent {
 	private float strokeWeight = 1;
 	
 	private Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
-	private static final int MAX_CONTROL_POINTS = 2;
+	private static final int MAX_CONTROL_POINTS = 1;
 
 	public Rectangle(float x, float y, float w, float h) {
 		super(x, y);
 		this.width = w;
 		this.height = h;
-	}
-
-	public float getRotation() {
-		return rotation;
-	}
-
-	public void setRotation(float rotation) {
-		this.rotation = rotation;
 	}
 
 	public float getWidth() {
@@ -77,32 +66,18 @@ public class Rectangle extends AbstractComponent {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public void update(AffineTransformStack s) {		
-		s.pushTransform();
-		s.translate(getX(), getY());
-		s.rotate(getRotation());
-	}
+	public void update() {}
 
-	public void preRender(PApplet p, AffineTransformStack s) {
-		update(s);
+	public void preRender(PApplet p) {
+		super.preRender(p);
 		
 		p.rectMode(PApplet.CENTER);
 		p.fill(getFillColor().getRGB());
 		p.stroke(getStrokeColor().getRGB());
 		p.strokeWeight(getStrokeWeight());
-		
-		p.pushMatrix();
-		
-		p.translate(getX(), getY());
-		p.rotate(getRotation());
-	}
-	
-	public void postRender(PApplet p, AffineTransformStack s) {
-		p.popMatrix();
-		s.popTransform();
 	}
 
-	public void render(PApplet p, AffineTransformStack s) {
+	public void render(PApplet p) {
 		p.rect(0, 0, getWidth(), getHeight());
 	}
 
@@ -110,24 +85,11 @@ public class Rectangle extends AbstractComponent {
 		return controlPoints.size() <= MAX_CONTROL_POINTS;
 	}
 
-	public boolean offer(ControlPoint cp, AffineTransformStack s) {
+	public boolean offer(ControlPoint cp) {
 		if (!canAcceptMoreControlPoints()) return false;
 		
-		s.pushTransform();
-		s.translate(getX(), getY());
-		s.rotate(getRotation());
-		
-		try {
-			Point2D xy = s.inverseTransform(cp.getX(), cp.getY());
-			if (xy.getX() > -getWidth()/2 && xy.getX() < getWidth()/2 && xy.getY() > -getHeight()/2 && xy.getY() < getHeight()/2) {
-				s.popTransform();
-				return true;
-			}
-		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
-		}
-		s.popTransform();
-		return false;
+		PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		return (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2);
 	}
 
 	public void controlPointCreated(ControlPoint cp) {
@@ -139,21 +101,32 @@ public class Rectangle extends AbstractComponent {
 	}
 
 	public void controlPointUpdated(ControlPoint cp) {
+		PVector newPos = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		PVector oldPos = transformToLocalSpace(new PVector(cp.getPreviousX(), cp.getPreviousY()));
+		float diffX = newPos.x - oldPos.x;
+		float diffY = newPos.y - oldPos.y;
+		
 		switch (controlPoints.size()) {
 			case 1:
-				float diffX = cp.getX() - cp.getPreviousX();
-				float diffY = cp.getY() - cp.getPreviousY();
-				setX(getX() + diffX);
-				setY(getY() + diffY);
+				getTransformMatrix().translate(diffX, diffY);
 				break;
 			case 2:
-				ControlPoint other;
+				ControlPoint other = null;
 				for (ControlPoint p: controlPoints) {
 					if (!cp.equals(p)) {
 						other = p;
 					}
 				}
-				// TODO add matrix manipulation code
+				PVector anchor = transformToLocalSpace(new PVector(other.getX(), other.getY()));
+				PVector diffNew = PVector.sub(newPos, anchor);
+				PVector diffOld = PVector.sub(oldPos, anchor);
+				double angle = Math.atan2(diffNew.y, diffNew.x) - Math.atan2(diffOld.y, diffOld.x);
+				float diffMag = diffNew.mag()/diffOld.mag();
+				
+				getTransformMatrix().translate(anchor.x, anchor.y);
+				getTransformMatrix().rotate(angle, 0, 0);
+				getTransformMatrix().scale(diffMag, diffMag);
+				getTransformMatrix().translate(-anchor.x, -anchor.y);
 		}
 	}
 

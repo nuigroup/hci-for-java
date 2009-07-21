@@ -21,6 +21,10 @@ public class TUIOControlPoint extends AbstractControlPoint implements TuioListen
 		this.screenHeight = screenHeight;
 	}
 
+	public TuioCursor getCursor() {
+		return cursor;
+	}
+
 	public float getX() {
 		return cursor.getScreenX((int) screenWidth);
 	}

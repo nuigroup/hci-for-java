@@ -1,9 +1,9 @@
 package nui.squirt.demo;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 
 import nui.squirt.NUIController;
-import nui.squirt.component.Button;
 import nui.squirt.component.Circle;
 import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
@@ -11,7 +11,6 @@ import nui.squirt.component.Label;
 import nui.squirt.component.Rectangle;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ValueListener;
-import nui.squirt.util.AffineTransformStack;
 
 public class DemoSquirtApplication {
 	
@@ -20,10 +19,10 @@ public class DemoSquirtApplication {
 			super(x, y, w, h);
 		}
 		@Override
-		public void update(AffineTransformStack s) {
-			super.update(s);
+		public void update() {
+			super.update();
 			
-			setRotation((float) (getRotation()+0.01));
+			getTransformMatrix().rotate(0.01F);
 		}	
 	}
 	
@@ -40,10 +39,10 @@ public class DemoSquirtApplication {
 		}
 		
 		@Override
-		public void update(AffineTransformStack s) {
-			super.update(s);
+		public void update() {
+			super.update();
 			
-			setRotation((float) (getRotation()-0.01));
+			getTransformMatrix().rotate(-0.01F);
 			setScale((float) Math.sin(counter));
 			counter += 0.01;
 		}
@@ -59,8 +58,8 @@ public class DemoSquirtApplication {
 		}
 		
 		@Override
-		public void update(AffineTransformStack s) {
-			super.update(s);
+		public void update() {
+			super.update();
 			
 			setRotation(counter);
 			if (counter < Math.PI+0.02 && counter > Math.PI-0.02) {
@@ -102,12 +101,12 @@ public class DemoSquirtApplication {
 		Rectangle r = new Rectangle(0, 0, 300, 600);
 		Rectangle r0 = new Rectangle(0, 0, 100, 150);
 		r0.setFillColor(new Color(128, 64, 32, 128));
-		r0.setRotation((float) (Math.PI/4));
-//		Rectangle r1 = new SpinningRectangle(-15, -100, 50, 60);
-//		r1.setFillColor(new Color(255, 0, 0, 150));
+		r0.getTransformMatrix().rotate(Math.PI/4, 0, 0);
+		Rectangle r1 = new SpinningRectangle(-15, -100, 50, 60);
+		r1.setFillColor(new Color(255, 0, 0, 150));
 		n.add(r);
 		n.add(r0);
-//		n.add(r1);
+		n.add(r1);
 		
 		Circle c = new Circle(150, -60, 150);
 		c.setFillColor(new Color(0, 0, 255, 128));

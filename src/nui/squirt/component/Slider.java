@@ -3,12 +3,10 @@ package nui.squirt.component;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import processing.core.PApplet;
-
 import nui.squirt.Valuable;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ValueListener;
-import nui.squirt.util.AffineTransformStack;
+import processing.core.PApplet;
 
 
 public class Slider extends Rectangle implements Valuable {
@@ -100,21 +98,21 @@ public class Slider extends Rectangle implements Valuable {
 	}
 	
 	@Override
-	public void update(AffineTransformStack s) {
+	public void update() {
 		// TODO Auto-generated method stub
-		super.update(s);
+		super.update();
 	}
 	
 	@Override
-	public void preRender(PApplet p, AffineTransformStack s) {
+	public void preRender(PApplet p) {
 		// TODO Auto-generated method stub
-		super.preRender(p, s);
+		super.preRender(p);
 	}
 	
 	@Override
-	public void render(PApplet p, AffineTransformStack s) {
+	public void render(PApplet p) {
 		// TODO Auto-generated method stub
-		super.render(p, s);
+		super.render(p);
 	}
 	
 	// Old code for rendering

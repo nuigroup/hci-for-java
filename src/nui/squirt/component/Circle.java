@@ -1,15 +1,12 @@
 package nui.squirt.component;
 
 import java.awt.Color;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import nui.squirt.ControlPoint;
-import nui.squirt.util.AffineTransformStack;
-
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Circle extends AbstractComponent {
 	
@@ -59,50 +56,26 @@ public class Circle extends AbstractComponent {
 		this.strokeWeight = strokeWeight;
 	}
 
-	public void update(AffineTransformStack s) {
-		s.pushTransform();
-		s.translate(getX(), getY());
-	}
+	public void update() {}
 
-	public void preRender(PApplet p, AffineTransformStack s) {
-		update(s);
+	public void preRender(PApplet p) {
+		super.preRender(p);
 		
 		p.ellipseMode(PApplet.CENTER);
 		p.fill(getFillColor().getRGB());
 		p.stroke(getStrokeColor().getRGB());
 		p.strokeWeight(getStrokeWeight());
-		
-		p.pushMatrix();
-		
-		p.translate(getX(), getY());
 	}
 
-	public void postRender(PApplet p, AffineTransformStack s) {
-		p.popMatrix();
-		s.popTransform();
-	}
-
-	public void render(PApplet p, AffineTransformStack s) {
+	public void render(PApplet p) {
 		p.ellipse(0, 0, getRadius()*2, getRadius()*2);
 	}
 
-	public boolean offer(ControlPoint cp, AffineTransformStack s) {
+	public boolean offer(ControlPoint cp) {
 		if (!canAcceptMoreControlPoints()) return false;
-		
-		s.pushTransform();
-		s.translate(getX(), getY());
-		
-		try {
-			Point2D xy = s.inverseTransform(cp.getX(), cp.getY());
-			if (xy.distance(0, 0) <= getRadius()) {
-				s.popTransform();
-				return true;
-			}
-		} catch (NoninvertibleTransformException e) {
-			e.printStackTrace();
-		}
-		s.popTransform();
-		return false;
+
+		PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		return (l.dist(new PVector(0, 0)) <= getRadius());
 	}
 
 	public boolean canAcceptMoreControlPoints() {
@@ -118,13 +91,32 @@ public class Circle extends AbstractComponent {
 	}
 
 	public void controlPointUpdated(ControlPoint cp) {
+		PVector newPos = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		PVector oldPos = transformToLocalSpace(new PVector(cp.getPreviousX(), cp.getPreviousY()));
+		float diffX = newPos.x - oldPos.x;
+		float diffY = newPos.y - oldPos.y;
+		
 		switch (controlPoints.size()) {
 			case 1:
-				float diffX = cp.getX() - cp.getPreviousX();
-				float diffY = cp.getY() - cp.getPreviousY();
-				setX(getX() + diffX);
-				setY(getY() + diffY);
+				getTransformMatrix().translate(diffX, diffY);
 				break;
+			case 2:
+				ControlPoint other = null;
+				for (ControlPoint p: controlPoints) {
+					if (!cp.equals(p)) {
+						other = p;
+					}
+				}
+				PVector anchor = transformToLocalSpace(new PVector(other.getX(), other.getY()));
+				PVector diffNew = PVector.sub(newPos, anchor);
+				PVector diffOld = PVector.sub(oldPos, anchor);
+				double angle = Math.atan2(diffNew.y, diffNew.x) - Math.atan2(diffOld.y, diffOld.x);
+				float diffMag = diffNew.mag()/diffOld.mag();
+				
+				getTransformMatrix().translate(anchor.x, anchor.y);
+				getTransformMatrix().rotate(angle, 0, 0);
+				getTransformMatrix().scale(diffMag, diffMag);
+				getTransformMatrix().translate(-anchor.x, -anchor.y);
 		}
 	}
 

@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import nui.squirt.Scalable;
 import processing.core.PApplet;
 import processing.core.PImage;
-
-import nui.squirt.Scalable;
-import nui.squirt.util.AffineTransformStack;
 
 
 public class Image extends Rectangle implements Scalable {
@@ -46,16 +44,16 @@ public class Image extends Rectangle implements Scalable {
 	}
 	
 	@Override
-	public void update(AffineTransformStack s) {
-		super.update(s);
+	public void update() {
+		super.update();
 		
 		setFillColor(NONE);
 		setStrokeColor(NONE);
 	}
 	
 	@Override
-	public void preRender(PApplet p, AffineTransformStack s) {
-		super.preRender(p, s);
+	public void preRender(PApplet p) {
+		super.preRender(p);
 		
 		p.scale(getScale());
 		
@@ -64,7 +62,7 @@ public class Image extends Rectangle implements Scalable {
 	}
 	
 	@Override
-	public void render(PApplet p, AffineTransformStack s) {		
+	public void render(PApplet p) {		
 		PImage i = images.get(getImagePath());
 		if (i == null) {
 			images.put(getImagePath(), p.loadImage(getImagePath()));

@@ -16,14 +16,17 @@ public abstract class AbstractContainer extends AbstractComponent implements Con
 
 	public void add(Component c) {
 		components.add(c);
+		c.setParent(this);
 	}
 	
 	public void add(Component c, Object constraints) {
 		components.add(c);
+		c.setParent(this);
 	}
 	
 	public void remove(Component c) {
 		components.remove(c);
+		c.setParent(null);
 	}
 
 	public List<Component> getComponents() {

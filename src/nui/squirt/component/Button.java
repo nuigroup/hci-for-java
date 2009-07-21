@@ -7,7 +7,6 @@ import java.util.Collection;
 import nui.squirt.Actionable;
 import nui.squirt.event.ActionEvent;
 import nui.squirt.listener.ActionListener;
-import nui.squirt.util.AffineTransformStack;
 import processing.core.PApplet;
 
 
@@ -71,8 +70,8 @@ public class Button extends Rectangle implements Actionable {
 	}
 	
 	@Override
-	public void update(AffineTransformStack s) {
-		super.update(s);
+	public void update() {
+		super.update();
 		
 		setFillColor(isPressed() ? PRESSED_COLOR : NOT_PRESSED_COLOR);
 		setStrokeColor(BORDER_COLOR);
@@ -83,12 +82,12 @@ public class Button extends Rectangle implements Actionable {
 	}
 	
 	@Override
-	public void render(PApplet p, AffineTransformStack s) {
-		super.render(p, s);
+	public void render(PApplet p) {
+		super.render(p);
 		
-		getLabel().preRender(p, s);
-		getLabel().render(p, s);
-		getLabel().postRender(p, s);
+		getLabel().preRender(p);
+		getLabel().render(p);
+		getLabel().postRender(p);
 	}
 	
 //	@Override
