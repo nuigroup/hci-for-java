@@ -43,7 +43,8 @@ public class DemoSquirtApplication {
 			super.update();
 			
 			getTransformMatrix().rotate(-0.01F);
-			setScale((float) Math.sin(counter));
+//			getTransformMatrix().scale(Math.sin(counter), Math.sin(counter));
+//			setScale((float) Math.sin(counter));
 			counter += 0.01;
 		}
 	}
@@ -95,8 +96,8 @@ public class DemoSquirtApplication {
 	public static void main(String[] args) {
 		NUIController n = NUIController.getInstance();
 		
-//		Image i = new SpinningScalingImage(0, 0, "squirtUI.png");
-//		n.add(i);
+		Image i = new SpinningScalingImage(0, 0, "squirtUI.png");
+		n.add(i);
 		
 		Rectangle r = new Rectangle(0, 0, 300, 600);
 		Rectangle r0 = new Rectangle(0, 0, 100, 150);
