@@ -10,7 +10,6 @@ import nui.squirt.component.AbstractContainer;
 import nui.squirt.controlpoint.MouseControlPoint;
 import nui.squirt.controlpoint.TUIOControlPoint;
 import nui.squirt.listener.ControlPointListener;
-import nui.squirt.util.AffineTransformStack;
 import processing.core.PApplet;
 import processing.core.PVector;
 import TUIO.TuioClient;
@@ -144,9 +143,6 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	public void addTuioCursor(TuioCursor c) {
 		TUIOControlPoint tcp = new TUIOControlPoint(c, screenWidth, screenHeight);
 		tc.addTuioListener(tcp);
-		AffineTransformStack s = new AffineTransformStack();
-		s.pushTransform();
-		s.translate(screenWidth/2, screenHeight/2);
 		offer(tcp);
 		tcp.fireControlPointCreatedEvent();
 		
