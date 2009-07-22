@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import nui.squirt.Actionable;
+import nui.squirt.ControlPoint;
 import nui.squirt.event.ActionEvent;
 import nui.squirt.listener.ActionListener;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 
 public class Button extends Rectangle implements Actionable {
@@ -23,7 +25,7 @@ public class Button extends Rectangle implements Actionable {
 
 	private Collection<ActionListener> listeners = new ArrayList<ActionListener>();
 	
-//	private HashMap<ControlPoint, Boolean> controlPoints = new HashMap<ControlPoint, Boolean>();
+	private ControlPoint current = null;
 	
 	public Button(float x, float y, String text) {
 		super(x, y, 0, 0);
@@ -90,14 +92,43 @@ public class Button extends Rectangle implements Actionable {
 		getLabel().postRender(p);
 	}
 	
-//	@Override
-//	protected void addControlPoint(ControlPoint cp) {
-//		controlPoints.put(cp, Boolean.TRUE);
-//	}
-//	
-//	@Override
-//	protected Collection<ControlPoint> getControlPoints() {
-//		return controlPoints.keySet();
-//	}
+	@Override
+	public boolean canAcceptMoreControlPoints() {
+		return current == null;
+	}
+	
+	@Override
+	public void controlPointCreated(ControlPoint cp) {
+		if (current == null) {
+			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
+				press();
+				current = cp;
+			}
+		}
+	}
+	
+	@Override
+	public void controlPointUpdated(ControlPoint cp) {
+		if (current != null && cp.equals(current)) {
+			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
+				pressed = true;
+			}
+			else pressed = false;
+		}
+	}
+	
+	@Override
+	public void controlPointDied(ControlPoint cp) {
+		if (current != null && cp.equals(current)) {
+			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
+				release();
+			}
+			else pressed = false;
+			current = null;
+		}
+	}
 	
 }

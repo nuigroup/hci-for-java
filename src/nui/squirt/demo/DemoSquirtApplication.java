@@ -1,15 +1,17 @@
 package nui.squirt.demo;
 
 import java.awt.Color;
-import java.awt.geom.AffineTransform;
 
 import nui.squirt.NUIController;
+import nui.squirt.component.Button;
 import nui.squirt.component.Circle;
 import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.component.Rectangle;
+import nui.squirt.event.ActionEvent;
 import nui.squirt.event.ValueEvent;
+import nui.squirt.listener.ActionListener;
 import nui.squirt.listener.ValueListener;
 
 public class DemoSquirtApplication {
@@ -115,9 +117,14 @@ public class DemoSquirtApplication {
 		c.setStrokeWeight(2);
 		n.add(c);
 		
-//		Button b = new Button(-150, 170, "button");
-//		b.setRotation((float) (Math.PI / 4));
-//		n.add(b);
+		Button b = new Button(-150, 170, "button");
+		b.addActionListener(new ActionListener() {
+			private int count = 0;
+			public void actionPerformed(ActionEvent e) {
+				((Button) e.getSource()).setText("Pressed " + (++count) + " times");
+			}
+		});
+		n.add(b);
 		
 //		Knob k = new SpinningKnob(450, 0, 128, -200, 1300, ((float) -Math.PI/2), ((float) Math.PI*3/4));
 //		ValueLabel knobLabel = new ValueLabel(k.getX(), k.getY()+k.getRadius()*(float)1.2, Float.toString(k.getValue()));
