@@ -9,6 +9,7 @@ import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
 import nui.squirt.component.Rectangle;
+import nui.squirt.component.Slider;
 import nui.squirt.event.ActionEvent;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ActionListener;
@@ -76,6 +77,19 @@ public class DemoSquirtApplication {
 		
 	}
 	
+	public static class SlidingSlider extends Slider {
+		private float counter = 0;
+		public SlidingSlider(float x, float y, float l, float minValue, float maxValue) {
+			super(x, y, l, minValue, maxValue);
+		}
+
+		@Override
+		public void update() {
+			super.update();
+			setValue(getValue()+0.1F);
+		}
+	}
+	
 	public static class ValueLabel extends Label implements ValueListener {
 		
 		public ValueLabel(float x, float y, String t) {
@@ -131,6 +145,13 @@ public class DemoSquirtApplication {
 		k.addValueListener(knobLabel);
 		n.add(k);
 		n.add(knobLabel);
+		
+		Slider s = new Slider(0, 350, 813, 0, 1);
+		s.getTransformMatrix().rotate(Math.PI/2);
+		ValueLabel sliderLabel = new ValueLabel(0, 360, Float.toString(s.getValue()));
+		s.addValueListener(sliderLabel);
+		n.add(s);
+		n.add(sliderLabel);
 		
 //		Label l = new Label(0, 0, "sqUIrt");
 //		n.add(l);

@@ -1,16 +1,20 @@
 package nui.squirt.component;
 
+import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import nui.squirt.ControlPoint;
 import nui.squirt.Valuable;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ValueListener;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 
 public class Slider extends Rectangle implements Valuable {
-	
+
 	private Collection<ValueListener> listeners = new ArrayList<ValueListener>();
 	
 	private float length;
@@ -18,9 +22,11 @@ public class Slider extends Rectangle implements Valuable {
 	private float minValue;
 	private float maxValue;
 	private float value;
+	
+	private ControlPoint current = null;
 
 	public Slider(float x, float y, float l) {
-		super(x, y, 30, 50);
+		super(x, y, 60, 90);
 		this.length = l;
 	}
 	
@@ -75,8 +81,7 @@ public class Slider extends Rectangle implements Valuable {
 	}
 
 	public void setValue(float value) {
-		ValueEvent e = new ValueEvent(this);
-		e.setOldValue(getValue());
+		float oldValue = getValue();
 		
 		float v = value;
 		if (value > getMaxValue())
@@ -85,6 +90,15 @@ public class Slider extends Rectangle implements Valuable {
 			v = getMinValue();
 		this.value = v;
 		
+		AffineTransform t = getTransformMatrix();
+		double a = getValue()-oldValue;
+		double b = a/getValueRange();
+		double c = b*getLength();
+		double d = -c;
+		t.translate(0, d);
+		
+		ValueEvent e = new ValueEvent(this);
+		e.setOldValue(oldValue);
 		e.setNewValue(getValue());
 		fireValueChanged(e);
 	}
@@ -98,21 +112,52 @@ public class Slider extends Rectangle implements Valuable {
 	}
 	
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		super.update();
-	}
-	
-	@Override
-	public void preRender(PApplet p) {
-		// TODO Auto-generated method stub
-		super.preRender(p);
-	}
-	
-	@Override
 	public void render(PApplet p) {
-		// TODO Auto-generated method stub
+		// Draw the path of the slider
+		p.stroke(25);
+		p.fill(75);
+
+		float h = (getValue()-getCenterValue()) / getValueRange() * getLength();
+		p.rect(0, h, 5, getLength());
+		
+		setStrokeColor(new Color(25));
 		super.render(p);
+		p.stroke(100);
+		p.line(-getWidth()/2, 0, getWidth()/2, 0);
+	}
+	
+	@Override
+	public boolean canAcceptMoreControlPoints() {
+		return current == null;
+	}
+	
+	@Override
+	public void controlPointCreated(ControlPoint cp) {
+		if (current == null) {
+			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
+				current = cp;
+			}
+		}
+	}
+	
+	@Override
+	public void controlPointDied(ControlPoint cp) {
+		if (current != null && cp.equals(current)) {
+			current = null;
+		}
+	}
+	
+	@Override
+	public void controlPointUpdated(ControlPoint cp) {
+		if (current != null && cp.equals(current)) {
+			PVector newPos = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+//			PVector oldPos = transformToLocalSpace(new PVector(cp.getPreviousX(), cp.getPreviousY()));
+			if (newPos.x >= -getWidth() && newPos.x <= getWidth()) {
+				setValue(-newPos.y*getValueRange()/getLength() + getValue());
+			}
+			else current = null;
+		}
 	}
 	
 	// Old code for rendering
