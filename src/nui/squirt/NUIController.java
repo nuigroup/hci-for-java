@@ -9,7 +9,6 @@ import java.util.ListIterator;
 import nui.squirt.component.AbstractContainer;
 import nui.squirt.controlpoint.MouseControlPoint;
 import nui.squirt.controlpoint.TUIOControlPoint;
-import nui.squirt.listener.ControlPointListener;
 import processing.core.PApplet;
 import processing.core.PVector;
 import TUIO.TuioClient;
@@ -120,6 +119,14 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	}
 
 	public boolean canAcceptMoreControlPoints() {
+		for (Component c: getComponents()) {
+			if (c.canAcceptMoreControlPoints())
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean isUnderPoint(ControlPoint cp) {
 		return true;
 	}
 
@@ -127,13 +134,13 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		ListIterator<Component> i = getComponents().listIterator(getComponents().size());
 		while (i.hasPrevious()) {
 			Component c = i.previous();
-			if (c.offer(cp)) {
+			if (c.isUnderPoint(cp) && c.offer(cp)) {
 				i.remove();
 				getComponents().add(c);
 				// TODO fix having this silly cast
-				if (c instanceof ControlPointListener) {
-					cp.addControlPointListener((ControlPointListener) c);
-				}
+//				if (c instanceof ControlPointListener) {
+//					cp.addControlPointListener((ControlPointListener) c);
+//				}
 				return true;
 			}
 		}

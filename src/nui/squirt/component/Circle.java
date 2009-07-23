@@ -71,15 +71,18 @@ public class Circle extends AbstractComponent {
 		p.ellipse(0, 0, getRadius()*2, getRadius()*2);
 	}
 
-	public boolean offer(ControlPoint cp) {
-		if (!canAcceptMoreControlPoints()) return false;
-
+	public boolean isUnderPoint(ControlPoint cp) {
 		PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 		return (l.dist(new PVector(0, 0)) <= getRadius());
 	}
 
 	public boolean canAcceptMoreControlPoints() {
 		return controlPoints.size() <= MAX_CONTROL_POINTS;
+	}
+	
+	public boolean offer(ControlPoint cp) {
+		cp.addControlPointListener(this);
+		return true;
 	}
 
 	public void controlPointCreated(ControlPoint cp) {

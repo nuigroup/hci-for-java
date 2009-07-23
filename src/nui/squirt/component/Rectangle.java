@@ -85,11 +85,14 @@ public class Rectangle extends AbstractComponent {
 		return controlPoints.size() <= MAX_CONTROL_POINTS;
 	}
 
-	public boolean offer(ControlPoint cp) {
-		if (!canAcceptMoreControlPoints()) return false;
-		
+	public boolean isUnderPoint(ControlPoint cp) {
 		PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 		return (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2);
+	}
+	
+	public boolean offer(ControlPoint cp) {
+		cp.addControlPointListener(this);
+		return true;
 	}
 
 	public void controlPointCreated(ControlPoint cp) {

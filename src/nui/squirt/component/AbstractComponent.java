@@ -62,61 +62,6 @@ public abstract class AbstractComponent implements Component, ControlPointListen
 		return result;
 	}
 	
-//	public float getX() {
-//		return (float) getTransformMatrix().getTranslateX();
-//	}
-//	
-//	public void setX(float x) {
-//		float r = getRotation();
-//		setRotation(0);
-//		getTransformMatrix().translate(x-getX(), 0);
-//		setRotation(r);
-//	}
-//	
-//	public float getY() {
-//		return (float) getTransformMatrix().getTranslateY();
-//	}
-//	
-//	public void setY(float y) {
-//		float r = getRotation();
-//		setRotation(0);
-//		getTransformMatrix().translate(0, y-getY());
-//		setRotation(r);
-//	}
-//	
-//	public float getRotation() {
-//		float[] pts = { getX(), getY(), getX()+1, getY() };
-//
-//		getTransformMatrix().transform(pts, 0, pts, 0, 2);
-//
-//		double dy = Math.abs(pts[3] - pts[1]);
-//		double l = PVector.dist(new PVector(pts[0], pts[1]), new PVector(pts[2], pts[3]));
-//		double rotation = Math.asin(dy / l);		
-//		
-//		// correct for quadrant
-//		if (pts[3] - pts[1] > 0) {
-//			if (pts[2] - pts[0] < 0) {
-//				rotation = Math.PI - rotation;
-//			}
-//		} else {
-//			if (pts[2] - pts[0] > 0) {
-//				rotation = 2 * Math.PI - rotation;
-//			} else {
-//				rotation = rotation + Math.PI;
-//			}
-//		}
-//
-//		return (float) rotation;
-//	}
-//	
-//	public void setRotation(float theta) {
-//		getTransformMatrix().rotate(theta-getRotation(), getX(), getY());
-//	}
-//	
-//	public void rotate(float theta) {
-//		getTransformMatrix().rotate(theta, getX(), getY());
-//	}
-	
 	public Container getParent() {
 		return parent;
 	}

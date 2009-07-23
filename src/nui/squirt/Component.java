@@ -33,7 +33,13 @@ public interface Component {
 	// Indicates whether this Component can accept offers of additional control points
 	public boolean canAcceptMoreControlPoints();
 	
-	// Returns true if no other Components should process this point
-	// TODO rename this method to reflect its current meaning
+	// Indicates whether a ControlPoint falls within the interactive area of a Component
+	public boolean isUnderPoint(ControlPoint cp);
+	
+	/**
+	 *  Returns true if this ControlPoint is accepted and no other Components should be offered it.
+	 *  This function assumes that recent calls have been made to canAcceptMoreControlPoints()
+	 *  and isUnderPoint() before the point is offered.
+	 */
 	public boolean offer(ControlPoint cp);
 }
