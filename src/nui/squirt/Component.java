@@ -34,5 +34,6 @@ public interface Component {
 	public boolean canAcceptMoreControlPoints();
 	
 	// Returns true if no other Components should process this point
+	// TODO rename this method to reflect its current meaning
 	public boolean offer(ControlPoint cp);
 }

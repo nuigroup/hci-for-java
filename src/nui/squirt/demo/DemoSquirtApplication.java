@@ -126,11 +126,11 @@ public class DemoSquirtApplication {
 		});
 		n.add(b);
 		
-//		Knob k = new SpinningKnob(450, 0, 128, -200, 1300, ((float) -Math.PI/2), ((float) Math.PI*3/4));
-//		ValueLabel knobLabel = new ValueLabel(k.getX(), k.getY()+k.getRadius()*(float)1.2, Float.toString(k.getValue()));
-//		k.addValueListener(knobLabel);
-//		n.add(k);
-//		n.add(knobLabel);
+		Knob k = new Knob(450, 0, 128, -200, 1300, ((float) -Math.PI/2), ((float) Math.PI*3/4));
+		ValueLabel knobLabel = new ValueLabel(450, 150, Float.toString(k.getValue()));
+		k.addValueListener(knobLabel);
+		n.add(k);
+		n.add(knobLabel);
 		
 //		Label l = new Label(0, 0, "sqUIrt");
 //		n.add(l);

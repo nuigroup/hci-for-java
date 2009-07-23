@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import nui.squirt.ControlPoint;
 import nui.squirt.Valuable;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ValueListener;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 
 public class Knob extends Circle implements Valuable {
@@ -161,7 +163,29 @@ public class Knob extends Circle implements Valuable {
 		p.stroke(INDICATOR_BORDER_COLOR.getRGB());
 		p.strokeWeight(KNOB_BORDER_WEIGHT/2);
 		
-		p.ellipse(0, -getRadius()*(float)0.85, getRadius()*(float)0.1, getRadius()*(float)0.1);
+		float r = getRadius()*0.85F;
+		
+		p.ellipse(r*PApplet.cos(getRotation()), r*PApplet.sin(getRotation()), getRadius()*(float)0.1, getRadius()*(float)0.1);
 	}
-
+	
+	@Override
+	public boolean canAcceptMoreControlPoints() {
+		return true;
+	}
+	
+	@Override
+	public void controlPointUpdated(ControlPoint cp) {
+		PVector newPos = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		PVector oldPos = transformToLocalSpace(new PVector(cp.getPreviousX(), cp.getPreviousY()));
+		double angleNew = Math.atan2(newPos.y, newPos.x);
+		double angleOld = Math.atan2(oldPos.y, oldPos.x);
+		double angle = angleNew - angleOld;
+		if (angle > Math.PI) {
+			angle = angle - 2*Math.PI;
+		}
+		if (angle < -Math.PI) {
+			angle = 2*Math.PI + angle;
+		}
+		setRotation((float) (getRotation()+angle));
+	}
 }
