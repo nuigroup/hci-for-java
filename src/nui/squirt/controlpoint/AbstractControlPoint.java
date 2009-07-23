@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import nui.squirt.ControlPoint;
-import nui.squirt.listener.ControlPointListener;
+import nui.squirt.ControlPointListener;
 
 
 public abstract class AbstractControlPoint implements ControlPoint {

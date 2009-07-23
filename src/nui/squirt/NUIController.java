@@ -137,10 +137,6 @@ public class NUIController extends AbstractContainer implements TuioListener {
 			if (c.isUnderPoint(cp) && c.offer(cp)) {
 				i.remove();
 				getComponents().add(c);
-				// TODO fix having this silly cast
-//				if (c instanceof ControlPointListener) {
-//					cp.addControlPointListener((ControlPointListener) c);
-//				}
 				return true;
 			}
 		}

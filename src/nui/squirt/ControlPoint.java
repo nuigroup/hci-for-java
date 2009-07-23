@@ -1,6 +1,5 @@
 package nui.squirt;
 
-import nui.squirt.listener.ControlPointListener;
 
 
 public interface ControlPoint {

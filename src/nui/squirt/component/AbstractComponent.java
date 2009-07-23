@@ -5,13 +5,12 @@ import java.awt.geom.NoninvertibleTransformException;
 
 import nui.squirt.Component;
 import nui.squirt.Container;
-import nui.squirt.listener.ControlPointListener;
 import processing.core.PApplet;
 import processing.core.PMatrix;
 import processing.core.PMatrix2D;
 import processing.core.PVector;
 
-public abstract class AbstractComponent implements Component, ControlPointListener {
+public abstract class AbstractComponent implements Component {
 	
 	private AffineTransform transformMatrix;
 	
