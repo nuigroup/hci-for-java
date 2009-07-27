@@ -1,69 +1,102 @@
 package nui.squirt.component;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import nui.squirt.Component;
 import nui.squirt.Container;
+import nui.squirt.ControlPoint;
 import processing.core.PApplet;
 
 
 public class Frame extends Rectangle implements Container {
+	
+	private List<Component> components = new ArrayList<Component>();
+	
+	public Frame(float x, float y, float w, float h) {
+		super(x,y,w,h);
+		setFillColor(new Color(75, 75, 75, 150));
+		setStrokeColor(new Color(0, 0, 0, 0));
+	}
 
 	public Frame(float x, float y) {
-		super(x, y, 0, 0);
-		// TODO Auto-generated constructor stub
-	}
-
-	public void postRender(PApplet p) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void preRender(PApplet p) {
-		// TODO Auto-generated method stub
-		
+		this(x, y, 100, 100);
 	}
 
 	public void render(PApplet p) {
-		// TODO Auto-generated method stub
+		super.render(p);
 		
-	}
-
-	public void update() {
-		// TODO Auto-generated method stub
-		
+		List<Component> l = new ArrayList<Component>(getComponents());
+		for (Component c: l) {
+			c.preRender(p);
+			c.render(p);
+			c.postRender(p);
+		}
 	}
 
 	public void add(Component c) {
-		// TODO Auto-generated method stub
-		
+		getComponents().add(c);
+		c.setParent(this);
 	}
 
 	public void add(Component c, Object constraints) {
-		// TODO Auto-generated method stub
-		
+		this.add(c);
 	}
 
 	public List<Component> getComponents() {
-		// TODO Auto-generated method stub
-		return null;
+		return components;
 	}
 
 	public void remove(Component c) {
-		// TODO Auto-generated method stub
-		
+		getComponents().remove(c);
+		c.setParent(null);
 	}
 	
-	// Old rendering code
-//	public void draw(Frame f) {
-//	ProcessingRenderingEngine engine = (ProcessingRenderingEngine) getRenderingEngine();
-//	PApplet pApplet = engine.getPApplet();
-//	
-//	// Draw a rectangle representing the frame
-//	pApplet.rectMode(PApplet.CENTER);
-//	pApplet.noStroke();
-//	pApplet.fill(75, 75, 75, 150);
-//	pApplet.rect(0, 0, f.getWidth(), f.getHeight());
-//}
+	@Override
+	public boolean canAcceptMoreControlPoints() {
+		if (super.canAcceptMoreControlPoints()) {
+			return true;
+		}
+		else {
+			for (Component c: getComponents()) {
+				if (c.canAcceptMoreControlPoints())
+					return true;
+			}
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isUnderPoint(ControlPoint cp) {
+		if (super.isUnderPoint(cp)) {
+			return true;
+		}
+		else {
+			for (Component c: getComponents()) {
+				if (c.isUnderPoint(cp))
+					return true;
+			}
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean offer(ControlPoint cp) {
+		ListIterator<Component> i = getComponents().listIterator(getComponents().size());
+		while (i.hasPrevious()) {
+			Component c = i.previous();
+			if (c.isUnderPoint(cp) && c.offer(cp)) {
+				i.remove();
+				getComponents().add(c);
+				return true;
+			}
+		}
+		if (super.canAcceptMoreControlPoints() && super.isUnderPoint(cp)) {
+			return super.offer(cp);
+		}
+		else return false;
+	}
 
 }

@@ -5,6 +5,7 @@ import java.awt.Color;
 import nui.squirt.NUIController;
 import nui.squirt.component.Button;
 import nui.squirt.component.Circle;
+import nui.squirt.component.Frame;
 import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
@@ -78,7 +79,6 @@ public class DemoSquirtApplication {
 	}
 	
 	public static class SlidingSlider extends Slider {
-		private float counter = 0;
 		public SlidingSlider(float x, float y, float l, float minValue, float maxValue) {
 			super(x, y, l, minValue, maxValue);
 		}
@@ -131,14 +131,18 @@ public class DemoSquirtApplication {
 		c.setStrokeWeight(2);
 		n.add(c);
 		
-		Button b = new Button(-150, 170, "button");
+		Frame buttonFrame = new Frame(-150, 170, 400, 250);
+		Label l = new Label(0, -75, "Button in Frame");
+		Button b = new Button(0, 50, "button");
 		b.addActionListener(new ActionListener() {
 			private int count = 0;
 			public void actionPerformed(ActionEvent e) {
 				((Button) e.getSource()).setText("Pressed " + (++count) + " times");
 			}
 		});
-		n.add(b);
+		buttonFrame.add(l);
+		buttonFrame.add(b);
+		n.add(buttonFrame);
 		
 		Knob k = new Knob(450, 0, 128, -200, 1300, ((float) -Math.PI/2), ((float) Math.PI*3/4));
 		ValueLabel knobLabel = new ValueLabel(450, 150, Float.toString(k.getValue()));
