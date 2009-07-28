@@ -132,12 +132,12 @@ public class DemoSquirtApplication {
 		n.add(c);
 		
 		Frame buttonFrame = new Frame(-150, 170, 400, 250);
-		Label l = new Label(0, -75, "Button in Frame");
+		Label l = new Label(0, -75, "button in frame");
 		Button b = new Button(0, 50, "button");
 		b.addActionListener(new ActionListener() {
 			private int count = 0;
 			public void actionPerformed(ActionEvent e) {
-				((Button) e.getSource()).setText("Pressed " + (++count) + " times");
+				((Button) e.getSource()).setText("pressed " + (++count) + " times");
 			}
 		});
 		buttonFrame.add(l);
@@ -157,8 +157,9 @@ public class DemoSquirtApplication {
 		n.add(s);
 		n.add(sliderLabel);
 		
-//		Label l = new Label(0, 0, "sqUIrt");
-//		n.add(l);
+		Label sqUIrt = new Label(0, 0, "sqUIrt");
+		sqUIrt.getTransformMatrix().scale(2.5, 2.5);
+		n.add(sqUIrt);
 		
 		n.start();
 	}

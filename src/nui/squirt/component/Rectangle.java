@@ -17,8 +17,8 @@ public class Rectangle extends AbstractComponent {
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight = 1;
 	
-	private Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
-	private static final int MAX_CONTROL_POINTS = 1;
+	protected Collection<ControlPoint> controlPoints = new ArrayList<ControlPoint>();
+	private static final int MAX_CONTROL_POINTS = 2;
 
 	public Rectangle(float x, float y, float w, float h) {
 		super(x, y);
@@ -31,6 +31,9 @@ public class Rectangle extends AbstractComponent {
 	}
 
 	public void setWidth(float width) {
+		if (width <= 0)	{
+			width = 1;
+		}
 		this.width = width;
 	}
 
@@ -39,6 +42,9 @@ public class Rectangle extends AbstractComponent {
 	}
 
 	public void setHeight(float height) {
+		if (height <= 0)	{
+			height = 1;
+		}
 		this.height = height;
 	}
 	
@@ -82,7 +88,7 @@ public class Rectangle extends AbstractComponent {
 	}
 
 	public boolean canAcceptMoreControlPoints() {
-		return controlPoints.size() <= MAX_CONTROL_POINTS;
+		return controlPoints.size() < MAX_CONTROL_POINTS;
 	}
 
 	public boolean isUnderPoint(ControlPoint cp) {

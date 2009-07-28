@@ -9,15 +9,22 @@ import nui.squirt.Component;
 import nui.squirt.Container;
 import nui.squirt.ControlPoint;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 
 public class Frame extends Rectangle implements Container {
 	
 	private List<Component> components = new ArrayList<Component>();
 	
+	private ControlPoint[] cornerCPs = new ControlPoint[4];
+	private static final int UPPER_LEFT = 0;
+	private static final int UPPER_RIGHT = 1;
+	private static final int LOWER_RIGHT = 2;
+	private static final int LOWER_LEFT = 3;
+	
 	public Frame(float x, float y, float w, float h) {
 		super(x,y,w,h);
-		setFillColor(new Color(75, 75, 75, 150));
+		setFillColor(new Color(75, 75, 75, 220));
 		setStrokeColor(new Color(0, 0, 0, 0));
 	}
 
@@ -28,6 +35,11 @@ public class Frame extends Rectangle implements Container {
 	public void render(PApplet p) {
 		super.render(p);
 		
+//		p.rect(-getWidth()*0.475F, -getHeight()*0.475F, getWidth()*0.05F, getHeight()*0.05F);
+//		p.rect(getWidth()*0.475F, -getHeight()*0.475F, getWidth()*0.05F, getHeight()*0.05F);
+//		p.rect(getWidth()*0.475F, getHeight()*0.475F, getWidth()*0.05F, getHeight()*0.05F);
+//		p.rect(-getWidth()*0.475F, getHeight()*0.475F, getWidth()*0.05F, getHeight()*0.05F);
+
 		List<Component> l = new ArrayList<Component>(getComponents());
 		for (Component c: l) {
 			c.preRender(p);
@@ -97,6 +109,95 @@ public class Frame extends Rectangle implements Container {
 			return super.offer(cp);
 		}
 		else return false;
+	}
+	
+	@Override
+	public void controlPointCreated(ControlPoint cp) {
+		PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		
+		boolean cornerMode = false;
+		for (ControlPoint p: cornerCPs) {
+			if (p != null) {
+				cornerMode = true;
+				break;
+			}
+		}
+		
+		if (controlPoints.size() == 0) {
+			if (cornerCPs[UPPER_LEFT] == null && cornerCPs[LOWER_LEFT] == null && cornerCPs[UPPER_RIGHT] == null &&
+					l.x > -getWidth()/2 && l.x < -getWidth()*0.45 &&
+					l.y > -getHeight()/2 && l.y < -getHeight()*0.45) {
+				cornerCPs[UPPER_LEFT] = cp;
+			}
+			else if (cornerCPs[UPPER_RIGHT] == null && cornerCPs[UPPER_LEFT] == null && cornerCPs[LOWER_RIGHT] == null &&
+					l.x < getWidth()/2 && l.x > getWidth()*0.45 &&
+					l.y > -getHeight()/2 && l.y < -getHeight()*0.45) {
+				cornerCPs[UPPER_RIGHT] = cp;
+			}
+			else if (cornerCPs[LOWER_RIGHT] == null && cornerCPs[UPPER_RIGHT] == null && cornerCPs[LOWER_LEFT] == null &&
+					l.x < getWidth()/2 && l.x > getWidth()*0.45 &&
+					l.y < getHeight()/2 && l.y > getHeight()*0.45) {
+				cornerCPs[LOWER_RIGHT] = cp;
+			}
+			else if (cornerCPs[LOWER_LEFT] == null && cornerCPs[LOWER_RIGHT] == null && cornerCPs[UPPER_LEFT] == null &&
+					l.x > -getWidth()/2 && l.x < -getWidth()*0.45 &&
+					l.y < getHeight()/2 && l.y > getHeight()*0.45) {
+				cornerCPs[LOWER_LEFT] = cp;
+			}
+			else if (!cornerMode) {
+				super.controlPointCreated(cp);
+			}
+		}
+		else {
+			super.controlPointCreated(cp);
+		}
+	}
+	
+	@Override
+	public void controlPointDied(ControlPoint cp) {
+		boolean isCornerPoint = false;
+		for (int i = 0; i < cornerCPs.length; i++) {
+			if (cornerCPs[i] != null && cornerCPs[i].equals(cp)) {
+				cornerCPs[i] = null;
+				isCornerPoint = true;
+				break;
+			}
+		}
+		if (!isCornerPoint) {
+			super.controlPointDied(cp);
+		}
+	}
+	
+	@Override
+	public void controlPointUpdated(ControlPoint cp) {
+		PVector newPos = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+		PVector oldPos = transformToLocalSpace(new PVector(cp.getPreviousX(), cp.getPreviousY()));
+		float diffX = newPos.x - oldPos.x;
+		float diffY = newPos.y - oldPos.y;
+		
+		if (cornerCPs[UPPER_LEFT] != null && cornerCPs[UPPER_LEFT].equals(cp)) {
+			setWidth(getWidth()-diffX);
+			setHeight(getHeight()-diffY);
+			getTransformMatrix().translate(diffX/2, diffY/2);
+		}
+		else if (cornerCPs[UPPER_RIGHT] != null && cornerCPs[UPPER_RIGHT].equals(cp)) {
+			setWidth(getWidth()+diffX);
+			setHeight(getHeight()-diffY);
+			getTransformMatrix().translate(diffX/2, diffY/2);
+		}
+		else if (cornerCPs[LOWER_RIGHT] != null && cornerCPs[LOWER_RIGHT].equals(cp)) {
+			setWidth(getWidth()+diffX);
+			setHeight(getHeight()+diffY);
+			getTransformMatrix().translate(diffX/2, diffY/2);
+		}
+		else if (cornerCPs[LOWER_LEFT] != null && cornerCPs[LOWER_LEFT].equals(cp)) {
+			setWidth(getWidth()-diffX);
+			setHeight(getHeight()+diffY);
+			getTransformMatrix().translate(diffX/2, diffY/2);
+		}
+		else {
+			super.controlPointUpdated(cp);
+		}
 	}
 
 }
