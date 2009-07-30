@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/slf4j-simple-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/libTUIO.jar"/>
 	<classpathentry kind="lib" path="lib/TuioDemo.jar"/>
+	<classpathentry kind="lib" path="lib/jbox2d-2.0.1-full.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

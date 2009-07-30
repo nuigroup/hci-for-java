@@ -1,5 +1,6 @@
 package nui.squirt;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +10,11 @@ import java.util.ListIterator;
 import nui.squirt.component.AbstractContainer;
 import nui.squirt.controlpoint.MouseControlPoint;
 import nui.squirt.controlpoint.TUIOControlPoint;
+
+import org.jbox2d.collision.AABB;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 import TUIO.TuioClient;
@@ -30,6 +36,9 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	private float screenHeight;
 
 	private MouseControlPoint mouseControlPoint;
+	
+	private AABB worldBounds = new AABB(new Vec2(-1920, -1600), new Vec2(1920, 1600));
+	private World world;
 	
 	public NUIController() {
 		this(0, 0);
@@ -87,7 +96,23 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		tc.connect();
 	}
 
-	public void update() {}
+	public void update() {
+		if (hasPhysicsWorld()) {
+			getWorld().step(1f/60f, 10);
+		}
+	}
+
+	public boolean hasPhysicsWorld() {
+		return getWorld() != null;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+	
+	public void createPhysicsWorld() {
+		this.world = new World(worldBounds, new Vec2(), true);
+	}
 
 	public void preRender(PApplet p) {
 		super.preRender(p);
@@ -96,6 +121,13 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	}
 
 	public void render(PApplet p) {
+		if (hasPhysicsWorld()) {
+			AABB bounds = getWorld().getWorldAABB();
+			p.rectMode(PApplet.CORNERS);
+			p.stroke(Color.RED.getRGB());
+			p.fill(0, 0);
+			p.rect(bounds.lowerBound.x, bounds.lowerBound.y, bounds.upperBound.x, bounds.upperBound.y);
+		}
 		List<Component> l = new ArrayList<Component>(getComponents());
 		for (Component c: l) {
 			c.preRender(p);

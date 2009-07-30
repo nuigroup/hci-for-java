@@ -16,6 +16,10 @@ public abstract class AbstractComponent implements Component {
 	
 	private Container parent;
 	
+	public AbstractComponent() {
+		this.transformMatrix = new AffineTransform();
+	}
+	
 	public AbstractComponent(float x, float y) {
 		this.transformMatrix = AffineTransform.getTranslateInstance(x, y);
 	}

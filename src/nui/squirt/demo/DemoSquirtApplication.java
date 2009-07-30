@@ -2,6 +2,10 @@ package nui.squirt.demo;
 
 import java.awt.Color;
 
+import org.jbox2d.collision.AABB;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
+
 import nui.squirt.NUIController;
 import nui.squirt.component.Button;
 import nui.squirt.component.Circle;
@@ -9,6 +13,7 @@ import nui.squirt.component.Frame;
 import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
+import nui.squirt.component.PhysicsRectangle;
 import nui.squirt.component.Rectangle;
 import nui.squirt.component.Slider;
 import nui.squirt.event.ActionEvent;
@@ -156,6 +161,20 @@ public class DemoSquirtApplication {
 		s.addValueListener(sliderLabel);
 		n.add(s);
 		n.add(sliderLabel);
+		
+		if (!n.hasPhysicsWorld()) n.createPhysicsWorld();
+		PhysicsRectangle p = new PhysicsRectangle(100, 200, 150, 150, n.getWorld());
+		PhysicsRectangle p1 = new PhysicsRectangle(-100, -200, 150, 150, n.getWorld());
+		PhysicsRectangle p2 = new PhysicsRectangle(200, 300, 100, 190, n.getWorld());
+		PhysicsRectangle p3 = new PhysicsRectangle(-400, 200, 150, 150, n.getWorld());
+		PhysicsRectangle p4 = new PhysicsRectangle(100, -200, 150, 150, n.getWorld());
+		PhysicsRectangle p5 = new PhysicsRectangle(-100, 200, 150, 150, n.getWorld());
+		n.add(p);
+		n.add(p1);
+		n.add(p2);
+		n.add(p3);
+		n.add(p4);
+		n.add(p5);
 		
 		Label sqUIrt = new Label(0, 0, "sqUIrt");
 		sqUIrt.getTransformMatrix().scale(2.5, 2.5);
