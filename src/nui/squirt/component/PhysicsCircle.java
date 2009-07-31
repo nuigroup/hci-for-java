@@ -4,43 +4,39 @@ import java.awt.Color;
 
 import nui.squirt.ControlPoint;
 
-import org.jbox2d.collision.PolygonDef;
+import org.jbox2d.collision.CircleDef;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class PhysicsRectangle extends PhysicsComponent {
+public class PhysicsCircle extends PhysicsComponent {
 	
-	private float width;
-	private float height;
+	private float radius;
 	
 	private Color fillColor = Color.CYAN;
 	private Color strokeColor = Color.BLACK;
 	private float strokeWeight = 1;
 	
-	public PhysicsRectangle(float x, float y, float w, float h, World world) {
-		super(x, y, world);
-		this.width = w;
-		this.height = h;
+	public PhysicsCircle(float x, float y, float r, World w) {
+		super(x, y, w);
+		this.radius = r;
 		
 		// Create collision rectangle
-		PolygonDef shapeDef = new PolygonDef();
+		CircleDef shapeDef = new CircleDef();
 		// Make sure it has non-zero density, otherwise it will have 0 mass and be static
 		shapeDef.density = 0.1f;
-		shapeDef.setAsBox(getWidth()/2, getHeight()/2);
+		shapeDef.radius = getRadius();
+		shapeDef.localPosition = new Vec2();
 		getBody().createShape(shapeDef);
 		
 		// Set mass of body
 		getBody().setMassFromShapes();
 	}
-	
-	public float getWidth() {
-		return width;
-	}
 
-	public float getHeight() {
-		return height;
+	public float getRadius() {
+		return radius;
 	}
 
 	public Color getFillColor() {
@@ -63,10 +59,6 @@ public class PhysicsRectangle extends PhysicsComponent {
 		return strokeWeight;
 	}
 
-	public void setStrokeWeight(float strokeWeight) {
-		this.strokeWeight = strokeWeight;
-	}
-
 	public void update() {
 		if (getBody().isFrozen()) setFillColor(Color.DARK_GRAY);
 		if (getBody().isSleeping()) {
@@ -81,7 +73,7 @@ public class PhysicsRectangle extends PhysicsComponent {
 	public void preRender(PApplet p) {
 		super.preRender(p);
 		
-		p.rectMode(PApplet.CENTER);
+		p.ellipseMode(PApplet.CENTER);
 		p.fill(getFillColor().getRGB());
 		p.stroke(getStrokeColor().getRGB());
 		p.strokeWeight(getStrokeWeight());
@@ -89,15 +81,16 @@ public class PhysicsRectangle extends PhysicsComponent {
 	
 	@Override
 	public void render(PApplet p) {
-		p.rect(0, 0, getWidth(), getHeight());
+		p.ellipse(0, 0, getRadius()*2, getRadius()*2);
+		
 		super.render(p);
 	}
 
 	public boolean isUnderPoint(ControlPoint cp) {
 		PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
-		return (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2);
+		return (l.dist(new PVector(0, 0)) <= getRadius());
 	}
-	
+
 	public boolean offer(ControlPoint cp) {
 		cp.addControlPointListener(this);
 		return true;

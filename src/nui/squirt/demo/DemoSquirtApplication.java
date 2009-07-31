@@ -13,6 +13,7 @@ import nui.squirt.component.Frame;
 import nui.squirt.component.Image;
 import nui.squirt.component.Knob;
 import nui.squirt.component.Label;
+import nui.squirt.component.PhysicsCircle;
 import nui.squirt.component.PhysicsRectangle;
 import nui.squirt.component.Rectangle;
 import nui.squirt.component.Slider;
@@ -164,9 +165,9 @@ public class DemoSquirtApplication {
 		
 		if (!n.hasPhysicsWorld()) n.createPhysicsWorld();
 		PhysicsRectangle p = new PhysicsRectangle(100, 200, 150, 150, n.getWorld());
-		PhysicsRectangle p1 = new PhysicsRectangle(-100, -200, 150, 150, n.getWorld());
+		PhysicsCircle p1 = new PhysicsCircle(-100, -200, 75, n.getWorld());
 		PhysicsRectangle p2 = new PhysicsRectangle(200, 300, 100, 190, n.getWorld());
-		PhysicsRectangle p3 = new PhysicsRectangle(-400, 200, 150, 150, n.getWorld());
+		PhysicsCircle p3 = new PhysicsCircle(-400, 200, 100, n.getWorld());
 		PhysicsRectangle p4 = new PhysicsRectangle(100, -200, 150, 150, n.getWorld());
 		PhysicsRectangle p5 = new PhysicsRectangle(-100, 200, 150, 150, n.getWorld());
 		n.add(p);
