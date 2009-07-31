@@ -2,6 +2,7 @@ package nui.squirt.component;
 
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
+import java.util.HashMap;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -19,6 +20,8 @@ public abstract class PhysicsComponent extends AbstractComponent {
 	private World world;
 	private Body body;
 	private MouseJoint mouseJoint;
+	
+	private HashMap<ControlPoint, MouseJoint> joints = new HashMap<ControlPoint, MouseJoint>();
 	
 	public PhysicsComponent(float x, float y, World world) {
 		this.world = world;
@@ -38,22 +41,22 @@ public abstract class PhysicsComponent extends AbstractComponent {
 	public Body getBody() {
 		return body;
 	}
-
-	public MouseJoint getMouseJoint() {
-		return mouseJoint;
-	}
+//
+//	public MouseJoint getMouseJoint() {
+//		return mouseJoint;
+//	}
 
 	public void render(PApplet p) {
-		if (getMouseJoint() != null) {
+		for (MouseJoint j: joints.values()) {
 			p.stroke(Color.RED.getRGB());
-			Vec2 localAnchor = getMouseJoint().m_localAnchor;
-			Vec2 target = getBody().getLocalPoint(getMouseJoint().m_target);
+			Vec2 localAnchor = j.m_localAnchor;
+			Vec2 target = getBody().getLocalPoint(j.m_target);
 			p.line(localAnchor.x, localAnchor.y, target.x, target.y);
 		}
 	}
 
 	public boolean canAcceptMoreControlPoints() {
-		return getMouseJoint() == null;
+		return true;
 	}
 
 	public void controlPointCreated(ControlPoint cp) {
@@ -64,22 +67,26 @@ public abstract class PhysicsComponent extends AbstractComponent {
         mouseJointDef.body2 = getBody();
         mouseJointDef.target.set(pos);
         mouseJointDef.maxForce = 100000.0f * getBody().m_mass;
-        this.mouseJoint = (MouseJoint) getWorld().createJoint(mouseJointDef);
+        joints.put(cp, (MouseJoint) getWorld().createJoint(mouseJointDef));
+//        this.mouseJoint = (MouseJoint) getWorld().createJoint(mouseJointDef);
         getBody().wakeUp();
 	}
 
 	public void controlPointDied(ControlPoint cp) {
-		if (getMouseJoint() != null) {
-			getWorld().destroyJoint(getMouseJoint());
-			this.mouseJoint = null;
+		MouseJoint j = joints.get(cp);
+		if (j != null) {
+			getWorld().destroyJoint(j);
+			joints.remove(cp);
+//			this.mouseJoint = null;
 		}
 	}
 
 	public void controlPointUpdated(ControlPoint cp) {
-		if (getMouseJoint() != null) {
+		MouseJoint j = joints.get(cp);
+		if (j != null) {
 			PVector local = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			Vec2 pos = getBody().getWorldPoint(new Vec2(local.x, local.y));
-			getMouseJoint().setTarget(pos);
+			j.setTarget(pos);
 		}
 	}
 	
