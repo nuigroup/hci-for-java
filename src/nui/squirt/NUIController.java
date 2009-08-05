@@ -10,12 +10,15 @@ import java.util.ListIterator;
 import nui.squirt.component.AbstractContainer;
 import nui.squirt.controlpoint.MouseControlPoint;
 import nui.squirt.controlpoint.TUIOControlPoint;
+import nui.squirt.event.KeyEvent;
+import nui.squirt.listener.KeyListener;
 
 import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PVector;
 import TUIO.TuioClient;
 import TUIO.TuioCursor;
@@ -24,9 +27,13 @@ import TUIO.TuioObject;
 import TUIO.TuioTime;
 
 @SuppressWarnings("serial")
-public class NUIController extends AbstractContainer implements TuioListener {
+public class NUIController extends AbstractContainer implements TuioListener, Keyboard {
 	
 	private static NUIController n;
+	
+	private float textAscent;
+	private float textDescent;
+	private PFont font;
 	
 	private TuioClient tc;
 	
@@ -39,6 +46,8 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	
 	private AABB worldBounds = new AABB(new Vec2(-1920, -1600), new Vec2(1920, 1600));
 	private World world;
+
+	private Collection<KeyListener> keyListeners = new ArrayList<KeyListener>();
 	
 	public NUIController() {
 		this(0, 0);
@@ -52,12 +61,16 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		@Override
 		public void setup() {
 			size(screen.width, screen.height);
-			NUIController.getInstance().screenWidth = width;
-			NUIController.getInstance().screenHeight = height;
-			NUIController.getInstance().getTransformMatrix().translate(width/2, height/2);
+			getInstance().screenWidth = width;
+			getInstance().screenHeight = height;
+			getInstance().getTransformMatrix().translate(width/2, height/2);
 			smooth();
 			
-			textFont(createFont("Helvetica", 32));
+			PFont f = createFont("Helvetica", 32);
+			textFont(f);
+			getInstance().font = f;
+			getInstance().textAscent = textAscent();
+			getInstance().textDescent = textDescent();
 		}
 		
 		@Override
@@ -81,6 +94,33 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		public void mouseDragged() {
 			getInstance().updateMouseControlPoint(new PVector(mouseX, mouseY));
 		}
+		
+		@Override
+		public void keyPressed() {
+			KeyEvent e = new KeyEvent(getInstance());
+			e.setCoded(key == CODED);
+			e.setKey(key);
+			e.setKeyCode(keyCode);
+			getInstance().fireKeyPressed(e);
+		}
+		
+		@Override
+		public void keyReleased() {
+			KeyEvent e = new KeyEvent(getInstance());
+			e.setCoded(key == CODED);
+			e.setKey(key);
+			e.setKeyCode(keyCode);
+			getInstance().fireKeyReleased(e);
+		}
+		
+		@Override
+		public void keyTyped() {
+			KeyEvent e = new KeyEvent(getInstance());
+			e.setCoded(key == CODED);
+			e.setKey(key);
+			e.setKeyCode(keyCode);
+			getInstance().fireKeyTyped(e);
+		}
 	}
 	
 	public static NUIController getInstance() {
@@ -89,6 +129,18 @@ public class NUIController extends AbstractContainer implements TuioListener {
 		return n;
 	}
 	
+	public float getTextAscent() {
+		return textAscent;
+	}
+
+	public float getTextDescent() {
+		return textDescent;
+	}
+
+	public PFont getFont() {
+		return font;
+	}
+
 	public void start() {
 		PApplet.main(new String[]{ "--present", "nui.squirt.NUIController$SquirtPApplet" });
 		tc = new TuioClient();
@@ -112,6 +164,12 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	
 	public void createPhysicsWorld() {
 		this.world = new World(worldBounds, new Vec2(), true);
+	}
+	
+	@Override
+	public void add(Component c) {
+		super.add(c);
+		if (c instanceof KeyListener) addKeyListener((KeyListener) c);
 	}
 
 	public void preRender(PApplet p) {
@@ -245,6 +303,32 @@ public class NUIController extends AbstractContainer implements TuioListener {
 	public void controlPointUpdated(ControlPoint cp) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void addKeyListener(KeyListener l) {
+		getKeyListeners().add(l);
+	}
+
+	public Collection<KeyListener> getKeyListeners() {
+		return keyListeners;
+	}
+
+	public void fireKeyPressed(KeyEvent e) {
+		for (KeyListener l: getKeyListeners()) {
+			l.keyPressed(e);
+		}
+	}
+
+	public void fireKeyReleased(KeyEvent e) {
+		for (KeyListener l: getKeyListeners()) {
+			l.keyReleased(e);
+		}
+	}
+
+	public void fireKeyTyped(KeyEvent e) {
+		for (KeyListener l: getKeyListeners()) {
+			l.keyTyped(e);
+		}
 	}
 
 }

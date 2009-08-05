@@ -19,7 +19,6 @@ public abstract class PhysicsComponent extends AbstractComponent {
 
 	private World world;
 	private Body body;
-	private MouseJoint mouseJoint;
 	
 	private HashMap<ControlPoint, MouseJoint> joints = new HashMap<ControlPoint, MouseJoint>();
 	
@@ -41,10 +40,6 @@ public abstract class PhysicsComponent extends AbstractComponent {
 	public Body getBody() {
 		return body;
 	}
-//
-//	public MouseJoint getMouseJoint() {
-//		return mouseJoint;
-//	}
 
 	public void render(PApplet p) {
 		for (MouseJoint j: joints.values()) {
@@ -68,7 +63,6 @@ public abstract class PhysicsComponent extends AbstractComponent {
         mouseJointDef.target.set(pos);
         mouseJointDef.maxForce = 100000.0f * getBody().m_mass;
         joints.put(cp, (MouseJoint) getWorld().createJoint(mouseJointDef));
-//        this.mouseJoint = (MouseJoint) getWorld().createJoint(mouseJointDef);
         getBody().wakeUp();
 	}
 
@@ -77,7 +71,6 @@ public abstract class PhysicsComponent extends AbstractComponent {
 		if (j != null) {
 			getWorld().destroyJoint(j);
 			joints.remove(cp);
-//			this.mouseJoint = null;
 		}
 	}
 

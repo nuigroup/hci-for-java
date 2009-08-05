@@ -17,6 +17,7 @@ import nui.squirt.component.PhysicsCircle;
 import nui.squirt.component.PhysicsRectangle;
 import nui.squirt.component.Rectangle;
 import nui.squirt.component.Slider;
+import nui.squirt.component.TextField;
 import nui.squirt.event.ActionEvent;
 import nui.squirt.event.ValueEvent;
 import nui.squirt.listener.ActionListener;
@@ -180,6 +181,9 @@ public class DemoSquirtApplication {
 		Label sqUIrt = new Label(0, 0, "sqUIrt");
 		sqUIrt.getTransformMatrix().scale(2.5, 2.5);
 		n.add(sqUIrt);
+		
+		TextField f = new TextField(200, -200, 200, "text field");
+		n.add(f);
 		
 		n.start();
 	}
