@@ -104,6 +104,7 @@ public class Button extends Rectangle implements Actionable {
 	@Override
 	public void controlPointCreated(ControlPoint cp) {
 		if (current == null) {
+			// TODO swap code below with call to isUnderPoint()
 			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
 				press();
@@ -115,6 +116,7 @@ public class Button extends Rectangle implements Actionable {
 	@Override
 	public void controlPointUpdated(ControlPoint cp) {
 		if (current != null && cp.equals(current)) {
+			// TODO swap code below with call to isUnderPoint()
 			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
 				pressed = true;
@@ -126,6 +128,7 @@ public class Button extends Rectangle implements Actionable {
 	@Override
 	public void controlPointDied(ControlPoint cp) {
 		if (current != null && cp.equals(current)) {
+			// TODO swap code below with call to isUnderPoint()
 			PVector l = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			if (l.x > -getWidth()/2 && l.x < getWidth()/2 && l.y > -getHeight()/2 && l.y < getHeight()/2) {
 				release();

@@ -47,7 +47,7 @@ public class NUIController extends AbstractContainer implements TuioListener, Ke
 	private AABB worldBounds = new AABB(new Vec2(-1920, -1600), new Vec2(1920, 1600));
 	private World world;
 
-	private Collection<KeyListener> keyListeners = new ArrayList<KeyListener>();
+	private KeyListener keyListener;
 	
 	public NUIController() {
 		this(0, 0);
@@ -164,12 +164,6 @@ public class NUIController extends AbstractContainer implements TuioListener, Ke
 	
 	public void createPhysicsWorld() {
 		this.world = new World(worldBounds, new Vec2(), true);
-	}
-	
-	@Override
-	public void add(Component c) {
-		super.add(c);
-		if (c instanceof KeyListener) addKeyListener((KeyListener) c);
 	}
 
 	public void preRender(PApplet p) {
@@ -306,33 +300,31 @@ public class NUIController extends AbstractContainer implements TuioListener, Ke
 	}
 
 	public void addKeyListener(KeyListener l) {
-		getKeyListeners().add(l);
+		if (keyListener != null) {
+			removeKeyListener(keyListener);
+		}
+		keyListener = l;
+		l.addKeyboard(this);
 	}
 
 	public void removeKeyListener(KeyListener l) {
-		getKeyListeners().remove(l);
-	}
-
-	public Collection<KeyListener> getKeyListeners() {
-		return keyListeners;
+		keyListener = null;
+		l.removeKeyboard(this);
 	}
 
 	public void fireKeyPressed(KeyEvent e) {
-		for (KeyListener l: getKeyListeners()) {
-			l.keyPressed(e);
-		}
+		if (keyListener != null)
+			keyListener.keyPressed(e);
 	}
 
 	public void fireKeyReleased(KeyEvent e) {
-		for (KeyListener l: getKeyListeners()) {
-			l.keyReleased(e);
-		}
+		if (keyListener != null)
+			keyListener.keyReleased(e);
 	}
 
 	public void fireKeyTyped(KeyEvent e) {
-		for (KeyListener l: getKeyListeners()) {
-			l.keyTyped(e);
-		}
+		if (keyListener != null)
+			keyListener.keyTyped(e);
 	}
 
 }

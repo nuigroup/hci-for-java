@@ -2,10 +2,6 @@ package nui.squirt.demo;
 
 import java.awt.Color;
 
-import org.jbox2d.collision.AABB;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
-
 import nui.squirt.NUIController;
 import nui.squirt.component.Button;
 import nui.squirt.component.Circle;
@@ -58,31 +54,6 @@ public class DemoSquirtApplication {
 //			setScale((float) Math.sin(counter));
 			counter += 0.01;
 		}
-	}
-	
-	private static class SpinningKnob extends Knob {
-
-		private float counter = (float) 0.1;
-		private float diff = (float) 0.02;
-
-		public SpinningKnob(float x, float y, float r, float minValue, float maxValue, float minAngle, float maxAngle) {
-			super(x, y, r, minValue, maxValue, minAngle, maxAngle);
-		}
-		
-		@Override
-		public void update() {
-			super.update();
-			
-			setRotation(counter);
-			if (counter < Math.PI+0.02 && counter > Math.PI-0.02) {
-				diff = (float) -0.02;
-			}
-			else if (counter > -Math.PI-0.02 && counter < -Math.PI+0.02) {
-				diff = (float) 0.02;
-			}
-			counter += diff;
-		}
-		
 	}
 	
 	public static class SlidingSlider extends Slider {
@@ -183,7 +154,9 @@ public class DemoSquirtApplication {
 		n.add(sqUIrt);
 		
 		TextField f = new TextField(200, -200, 200, "text field");
+		TextField f1 = new TextField(-200, 200, 200, "text field 2");
 		n.add(f);
+		n.add(f1);
 		
 		n.start();
 	}
