@@ -4,8 +4,8 @@ import nui.squirt.Valuable;
 
 public class ValueEvent extends Event {
 	
-	float oldValue;
-	float newValue;
+	private float oldValue;
+	private float newValue;
 
 	public ValueEvent(Valuable source) {
 		super(source);

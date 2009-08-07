@@ -1,15 +1,20 @@
 package nui.squirt.component;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import nui.squirt.NUIController;
+import nui.squirt.TextInput;
 import nui.squirt.event.KeyEvent;
+import nui.squirt.event.TextEvent;
 import nui.squirt.listener.KeyListener;
+import nui.squirt.listener.TextListener;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
-public class TextField extends Rectangle implements KeyListener {
+public class TextField extends Rectangle implements TextInput, KeyListener {
 	
 	private static final Color TEXT_FIELD_FILL_COLOR = Color.WHITE;
 	private static final Color TEXT_FIELD_BORDER_COLOR = Color.BLACK;
@@ -24,6 +29,8 @@ public class TextField extends Rectangle implements KeyListener {
 	private int caretIndex = 0;
 	
 	private float textOffset = 0;
+	
+	private Collection<TextListener> listeners = new ArrayList<TextListener>();
 
 	public TextField(float x, float y, float w) {
 		super(x, y, w, 0);
@@ -39,7 +46,13 @@ public class TextField extends Rectangle implements KeyListener {
 	}
 
 	public void setText(String text) {
+		TextEvent e = new TextEvent(this);
+		e.setOldText(getText());
+		e.setNewText(text);
+		
 		this.text = text;
+		
+		fireTextChanged(e);
 	}
 
 	public int getCaretIndex() {
@@ -133,6 +146,20 @@ public class TextField extends Rectangle implements KeyListener {
 				setText(getText().substring(0, getCaretIndex()) + e.getKey() + getText().substring(getCaretIndex()));
 				setCaretIndex(getCaretIndex()+1);
 			}
+		}
+	}
+
+	public void addTextListener(TextListener l) {
+		listeners.add(l);
+	}
+
+	public void removeTextListener(TextListener l) {
+		listeners.remove(l);
+	}
+
+	public void fireTextChanged(TextEvent e) {
+		for (TextListener l: listeners) {
+			l.textChanged(e);
 		}
 	}
 
