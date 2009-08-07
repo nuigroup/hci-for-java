@@ -46,6 +46,10 @@ public class Slider extends Rectangle implements Valuable {
 		listeners.add(l);
 	}
 
+	public void removeValueListener(ValueListener l) {
+		listeners.remove(l);
+	}
+
 	public void fireValueChanged(ValueEvent e) {
 		for (ValueListener l: listeners) {
 			l.valueChanged(e);

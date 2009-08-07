@@ -309,6 +309,10 @@ public class NUIController extends AbstractContainer implements TuioListener, Ke
 		getKeyListeners().add(l);
 	}
 
+	public void removeKeyListener(KeyListener l) {
+		getKeyListeners().remove(l);
+	}
+
 	public Collection<KeyListener> getKeyListeners() {
 		return keyListeners;
 	}

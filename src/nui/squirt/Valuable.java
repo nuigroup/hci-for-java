@@ -9,6 +9,7 @@ import nui.squirt.listener.ValueListener;
 public interface Valuable extends Component {
 
 	public void addValueListener(ValueListener l);
+	public void removeValueListener(ValueListener l);
 	
 	public void fireValueChanged(ValueEvent e);
 	

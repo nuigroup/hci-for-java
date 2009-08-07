@@ -13,6 +13,8 @@ public interface ControlPoint {
 	public float getPreviousY();
 	
 	public void addControlPointListener(ControlPointListener l);
+	public void removeControlPointListener(ControlPointListener l);
+	
 	public void fireControlPointCreatedEvent();
 	public void fireControlPointDiedEvent();
 	public void fireControlPointUpdatedEvent();

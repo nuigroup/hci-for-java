@@ -25,6 +25,10 @@ public abstract class AbstractControlPoint implements ControlPoint {
 		listeners.add(l);
 	}
 	
+	public void removeControlPointListener(ControlPointListener l) {
+		listeners.remove(l);
+	}
+	
 	protected Collection<ControlPointListener> getControlPointListeners() {
 		return listeners;
 	}

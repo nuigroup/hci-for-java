@@ -9,6 +9,7 @@ import nui.squirt.listener.ActionListener;
 public interface Actionable extends Component{
 	
 	public void addActionListener(ActionListener a);
+	public void removerActionListener(ActionListener a);
 	
 	public void fireAction(ActionEvent e);
 	

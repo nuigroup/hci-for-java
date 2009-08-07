@@ -57,6 +57,10 @@ public class Button extends Rectangle implements Actionable {
 		listeners.add(a);
 	}
 
+	public void removerActionListener(ActionListener a) {
+		listeners.remove(a);
+	}
+
 	public void fireAction(ActionEvent e) {
 		for (ActionListener l: listeners) {
 			l.actionPerformed(e);
