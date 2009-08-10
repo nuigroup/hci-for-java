@@ -36,6 +36,8 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	
 	private float textOffset = 0;
 	
+	private boolean shiftDown = false;
+	
 	private Collection<TextListener> listeners = new ArrayList<TextListener>();
 	
 	private Collection<Keyboard> keyboards = new ArrayList<Keyboard>();
@@ -70,8 +72,8 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	}
 
 	public void setCaretIndex(int caretIndex) {
-		if (caretIndex < 0) this.caretIndex = 0;
-		if (caretIndex > getText().length()) this.caretIndex = getText().length();
+		if (caretIndex < 0) caretIndex = 0;
+		if (caretIndex > getText().length()) caretIndex = getText().length();
 		this.caretIndex = caretIndex;
 	}
 
@@ -80,8 +82,8 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	}
 
 	public void setSecondaryCaretIndex(int secondaryCaretIndex) {
-		if (secondaryCaretIndex < 0) this.secondaryCaretIndex = 0;
-		if (secondaryCaretIndex > getText().length()) this.secondaryCaretIndex = getText().length();
+		if (secondaryCaretIndex < 0) secondaryCaretIndex = 0;
+		if (secondaryCaretIndex > getText().length()) secondaryCaretIndex = getText().length();
 		this.secondaryCaretIndex = secondaryCaretIndex;
 	}
 
@@ -149,30 +151,43 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 				case KeyEvent.LEFT:
 					int i = getCaretIndex();
 					int s = getSecondaryCaretIndex();
-					if (i == s) {
+					if (shiftDown) {
 						setCaretIndex(i-1);
-						setSecondaryCaretIndex(getCaretIndex());
 					}
-					else if (i < s) {
-						setSecondaryCaretIndex(i);
-					}
-					else if (i > s) {
-						setCaretIndex(s);
+					else {
+						if (i == s) {
+							setCaretIndex(i-1);
+							setSecondaryCaretIndex(getCaretIndex());
+						}
+						else if (i < s) {
+							setSecondaryCaretIndex(i);
+						}
+						else if (i > s) {
+							setCaretIndex(s);
+						}
 					}
 					break;
 				case KeyEvent.RIGHT:
 					i = getCaretIndex();
 					s = getSecondaryCaretIndex();
-					if (i == s) {
+					if (shiftDown) {
 						setCaretIndex(i+1);
-						setSecondaryCaretIndex(getCaretIndex());
 					}
-					else if (i > s) {
-						setSecondaryCaretIndex(i);
+					else {
+						if (i == s) {
+							setCaretIndex(i+1);
+							setSecondaryCaretIndex(getCaretIndex());
+						}
+						else if (i > s) {
+							setSecondaryCaretIndex(i);
+						}
+						else if (i < s) {
+							setCaretIndex(s);
+						}
 					}
-					else if (i < s) {
-						setCaretIndex(s);
-					}
+					break;
+				case KeyEvent.SHIFT:
+					shiftDown = true;
 					break;
 			}
 		}
@@ -180,8 +195,13 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	}
 
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.isCoded()) {
+			switch (e.getKeyCode()) {
+				case KeyEvent.SHIFT:
+					shiftDown = false;
+					break;
+			}
+		}
 	}
 
 	public void keyTyped(KeyEvent e) {
@@ -244,7 +264,9 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 			PVector local = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			local.add(getWidth()/2 - TEXT_FIELD_TEXT_PADDING, getHeight()/2 - TEXT_FIELD_TEXT_PADDING, 0);
 			setCaretIndex(mapPosToStringIndex(local));
-			setSecondaryCaretIndex(getCaretIndex());
+			if (!shiftDown) {
+				setSecondaryCaretIndex(getCaretIndex());
+			}
 		}
 	}
 	
@@ -260,7 +282,7 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 		if (controlPoint != null && controlPoint.equals(cp)) {
 			PVector local = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			local.add(getWidth()/2 - TEXT_FIELD_TEXT_PADDING, getHeight()/2 - TEXT_FIELD_TEXT_PADDING, 0);
-			setSecondaryCaretIndex(mapPosToStringIndex(local));
+			setCaretIndex(mapPosToStringIndex(local));
 		}
 	}
 
