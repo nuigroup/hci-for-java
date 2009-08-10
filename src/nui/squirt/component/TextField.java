@@ -32,6 +32,7 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	
 	private int timer = 0;
 	private int caretIndex = 0;
+	private int secondaryCaretIndex = caretIndex;
 	
 	private float textOffset = 0;
 	
@@ -69,9 +70,19 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	}
 
 	public void setCaretIndex(int caretIndex) {
-		if (caretIndex < 0) caretIndex = 0;
-		if (caretIndex > getText().length()) caretIndex = getText().length();
+		if (caretIndex < 0) this.caretIndex = 0;
+		if (caretIndex > getText().length()) this.caretIndex = getText().length();
 		this.caretIndex = caretIndex;
+	}
+
+	public int getSecondaryCaretIndex() {
+		return secondaryCaretIndex;
+	}
+
+	public void setSecondaryCaretIndex(int secondaryCaretIndex) {
+		if (secondaryCaretIndex < 0) this.secondaryCaretIndex = 0;
+		if (secondaryCaretIndex > getText().length()) this.secondaryCaretIndex = getText().length();
+		this.secondaryCaretIndex = secondaryCaretIndex;
 	}
 
 	@Override
@@ -118,7 +129,13 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 			textOffset += -(caretPos + textOffset) + 2;
 		}
 		textCanvas.text(getText(), textOffset, 0);
+		textCanvas.noStroke();
+		textCanvas.fill(16, 16, 255, 80);
+		textCanvas.rectMode(PApplet.CORNERS);
+		float secondaryPos = textCanvas.textWidth(getText().substring(0, getSecondaryCaretIndex()));
+		textCanvas.rect(secondaryPos + textOffset, 0, caretPos + textOffset, textCanvas.height);
 		if (!keyboards.isEmpty() && ++timer%30 < 15) {
+			textCanvas.stroke(TEXT_FIELD_TEXT_COLOR.getRGB());
 			textCanvas.line(caretPos + textOffset, 0, caretPos + textOffset, textCanvas.height);
 		}
 		textCanvas.endDraw();
@@ -130,13 +147,36 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 		if (e.isCoded()) {
 			switch (e.getKeyCode()) {
 				case KeyEvent.LEFT:
-					setCaretIndex(getCaretIndex()-1);
+					int i = getCaretIndex();
+					int s = getSecondaryCaretIndex();
+					if (i == s) {
+						setCaretIndex(i-1);
+						setSecondaryCaretIndex(getCaretIndex());
+					}
+					else if (i < s) {
+						setSecondaryCaretIndex(i);
+					}
+					else if (i > s) {
+						setCaretIndex(s);
+					}
 					break;
 				case KeyEvent.RIGHT:
-					setCaretIndex(getCaretIndex()+1);
+					i = getCaretIndex();
+					s = getSecondaryCaretIndex();
+					if (i == s) {
+						setCaretIndex(i+1);
+						setSecondaryCaretIndex(getCaretIndex());
+					}
+					else if (i > s) {
+						setSecondaryCaretIndex(i);
+					}
+					else if (i < s) {
+						setCaretIndex(s);
+					}
 					break;
 			}
 		}
+		timer = 0;
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -154,9 +194,12 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 				setText(getText().substring(0, getCaretIndex()) + getText().substring(getCaretIndex()+1));
 			}
 			else if (e.getKey() != KeyEvent.DELETE && e.getKey() != KeyEvent.BACKSPACE) {
-				setText(getText().substring(0, getCaretIndex()) + e.getKey() + getText().substring(getCaretIndex()));
-				setCaretIndex(getCaretIndex()+1);
+				int min = Math.min(getCaretIndex(), getSecondaryCaretIndex());
+				int max = Math.max(getCaretIndex(), getSecondaryCaretIndex());
+				setText(getText().substring(0, min) + e.getKey() + getText().substring(max));
+				setCaretIndex(min+1);
 			}
+			setSecondaryCaretIndex(getCaretIndex());
 		}
 	}
 
@@ -200,7 +243,8 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 			NUIController.getInstance().addKeyListener(this);
 			PVector local = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
 			local.add(getWidth()/2 - TEXT_FIELD_TEXT_PADDING, getHeight()/2 - TEXT_FIELD_TEXT_PADDING, 0);
-			caretIndex = mapPosToStringIndex(local);
+			setCaretIndex(mapPosToStringIndex(local));
+			setSecondaryCaretIndex(getCaretIndex());
 		}
 	}
 	
@@ -213,7 +257,11 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 	
 	@Override
 	public void controlPointUpdated(ControlPoint cp) {
-		// TODO Auto-generated method stub
+		if (controlPoint != null && controlPoint.equals(cp)) {
+			PVector local = transformToLocalSpace(new PVector(cp.getX(), cp.getY()));
+			local.add(getWidth()/2 - TEXT_FIELD_TEXT_PADDING, getHeight()/2 - TEXT_FIELD_TEXT_PADDING, 0);
+			setSecondaryCaretIndex(mapPosToStringIndex(local));
+		}
 	}
 
 	private int mapPosToStringIndex(PVector pos) {
@@ -250,10 +298,10 @@ public class TextField extends Rectangle implements TextInput, KeyListener {
 
 	private float indexPos(int index) {
 		if (index > getText().length())
-			return Float.MAX_VALUE;
+			return Float.POSITIVE_INFINITY;
 		if (index < 0)
-			return Float.MIN_VALUE;
-		return textCanvas.textWidth(getText().substring(0, index)) - textOffset;
+			return Float.NEGATIVE_INFINITY;
+		return textCanvas.textWidth(getText().substring(0, index)) + textOffset;
 	}
 
 }
